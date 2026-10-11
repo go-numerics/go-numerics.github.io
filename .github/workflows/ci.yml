@@ -1,0 +1,52 @@
+name: ci
+
+on:
+  pull_request:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  build:
+    name: the site builds
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+      - uses: peaceiris/actions-hugo@v3
+        with:
+          hugo-version: "0.167.0"
+          extended: true
+      - run: hugo --minify
+      # A page that builds and says nothing is a page nobody notices is empty.
+      - name: every repository is on it
+        run: |
+          for repo in optimize integrate special docs brand; do
+            grep -q "go-numerics/$repo" public/index.html \
+              || { echo "::error::$repo is not on the page"; exit 1; }
+          done
+          echo "the page names every repository this org has"
+
+  # static/img/figure.svg is what figure/main.go draws, with the library
+  # versions figure/go.mod names. The page shows that program as the terminal
+  # in the hero, so a figure that no longer matches it would be a claim the
+  # page cannot back. This draws it again and compares the bytes.
+  figure:
+    name: the figure is what its program draws
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-go@v7
+        with:
+          go-version-file: figure/go.mod
+          cache-dependency-path: figure/go.sum
+      - name: Draw the figure
+        working-directory: figure
+        run: go run . > ../static/img/figure.svg
+      - name: The committed figure is the one drawn
+        run: |
+          if ! git diff --exit-code --stat -- static/img/figure.svg; then
+            echo "::error::static/img/figure.svg differs from what figure/main.go draws: run 'cd figure && go run . > ../static/img/figure.svg' and commit it"
+            exit 1
+          fi

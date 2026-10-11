@@ -1,0 +1,9 @@
+<svg viewBox="0 0 256 256" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="go-numerics">
+  <defs><linearGradient id="numgrad" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#B794E4"/><stop offset="1" stop-color="#7445AD"/></linearGradient></defs>
+  <rect width="256" height="256" rx="56" fill="url(#numgrad)"/>
+  <g fill="none" stroke="#FFFFFF" stroke-width="13" stroke-linecap="round" stroke-linejoin="round">
+    <path d="M92 62C88 48 72 46 70 66L66 190C64 210 48 210 44 194"/>
+    <path d="M110 196V136C146 150 170 70 208 80V196Z"/>
+    <path d="M143 196V125"/><path d="M176 196V91"/>
+  </g>
+</svg>
