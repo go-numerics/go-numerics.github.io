@@ -16,7 +16,7 @@ jobs:
       - uses: actions/checkout@v7
       - uses: peaceiris/actions-hugo@v3
         with:
-          hugo-version: "0.167.0"
+          hugo-version: "0.168.0"
           extended: true
       - run: hugo --minify
       # A page that builds and says nothing is a page nobody notices is empty.
