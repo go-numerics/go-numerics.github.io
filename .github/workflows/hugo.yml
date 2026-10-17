@@ -63,6 +63,23 @@ jobs:
             --minify \
             --baseURL "${{ steps.pages.outputs.base_url }}/"
 
+      # The playground: the page, its example notebooks and the WebAssembly
+      # core, built here from the go-notebook/playground version that
+      # playground/go.mod pins (never a committed binary). The build runs
+      # every notebook first and fails if a cell fails.
+      - name: Setup Go
+        uses: actions/setup-go@v7
+        with:
+          go-version-file: playground/go.mod
+          cache-dependency-path: playground/go.sum
+
+      - name: Build the playground
+        working-directory: playground
+        run: |
+          go run github.com/go-notebook/playground/cmd/build \
+            -o ../public/playground -org go-numerics -home "${{ steps.pages.outputs.base_url }}/" \
+            -accent '#7445ad' -accent-dark '#b794e4' notebooks/*.md
+
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v5
         with:
