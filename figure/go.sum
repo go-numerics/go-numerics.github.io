@@ -2,10 +2,10 @@ github.com/andybalholm/brotli v1.2.6 h1:ftYnfj6usCp+UGV5kSJ3+chpMQgU+gJf/AxsUQ52
 github.com/andybalholm/brotli v1.2.6/go.mod h1:rzTDkvFWvIrjDXZHkuS16NPggd91W3kUSvPlQ1pLaKY=
 github.com/go-gfx/gfx v0.35.0 h1:AaXMxDMxNB1hROxzx+3EoO06KxsrQUvnw/10olmSgVo=
 github.com/go-gfx/gfx v0.35.0/go.mod h1:qIZS9u2+VnBk5CX7o4f/fQ5uD8c+mPFTtAPE85s8V90=
-github.com/go-ndarray/ndarray v0.11.0 h1:HMW7rAI25wSNNgVxOFTYCz48vW/wIBRT8IN17DNZHQ8=
-github.com/go-ndarray/ndarray v0.11.0/go.mod h1:ZcgNCBVLXt1FxeZjQWI5Z+k0SSWAT0/wR8slfat/gRA=
-github.com/go-numerics/integrate v0.1.0 h1:m1HxKk9CjH8tPjd6rPNq6tdHEl95BHokGbdniG4qbBY=
-github.com/go-numerics/integrate v0.1.0/go.mod h1:EGBYtIsMIeVcuVcf6LnLx5/p2lCwbAybdGMiHhwoh/c=
+github.com/go-ndarray/ndarray v0.12.0 h1:4xfl9ZQo1m0UXopo06KypELg1wUYgQb5kdKaJPZAZus=
+github.com/go-ndarray/ndarray v0.12.0/go.mod h1:ZcgNCBVLXt1FxeZjQWI5Z+k0SSWAT0/wR8slfat/gRA=
+github.com/go-numerics/integrate v0.2.0 h1:IkJhDimTc7nQETCixEvbbHhtOF36GbANBKJI3mJB3Kw=
+github.com/go-numerics/integrate v0.2.0/go.mod h1:ABjpcWy8ZSOg8j6S+7YRsvMJ2LpVkH4E64/CGet2gCw=
 github.com/go-opentype/fonts v0.12.0 h1:gjYYkbDZBK3JHpraakgGNnXdkGq8oADerhDYjC22ILQ=
 github.com/go-opentype/fonts v0.12.0/go.mod h1:Kiep7ojxxaR2ALFeB/akcFHQyl1gG5OLIobp8EzaZSA=
 github.com/go-opentype/opentype v0.15.0 h1:ioE3eCbNZavlk/w073J3uX5FKjqhgOHQw+wZZdJ+gE4=
