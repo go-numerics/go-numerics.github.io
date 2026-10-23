@@ -24,3 +24,12 @@ hugo server
 | `links.yml` | every link and image of the built site resolves |
 
 BSD-3-Clause.
+
+## The design is not here
+
+It comes from the shared Hugo module
+[`go-fleettools/landingkit`](https://github.com/go-fleettools/landingkit),
+pinned in `go.mod` (Renovate bumps it); `kit.go` keeps `go mod tidy` from
+deleting that requirement. `[params.brand]` in `hugo.toml` is read from the logo by
+`landingkit brand`. A file under `layouts/partials/` with the name of one of the
+kit's would silently override it.

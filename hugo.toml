@@ -8,6 +8,11 @@ title   = 'go-numerics'
 
 disableKinds = ['taxonomy', 'term', 'rss', 'sitemap', '404']
 
+# The design comes from the landing kit, a Hugo module pinned in go.mod.
+[module]
+  [[module.imports]]
+    path = "github.com/go-fleettools/landingkit"
+
 [markup.goldmark.renderer]
   unsafe = true
 
