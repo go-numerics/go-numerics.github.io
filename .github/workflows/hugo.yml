@@ -83,8 +83,8 @@ jobs:
         working-directory: playground
         run: |
           go run github.com/go-notebook/playground/cmd/build \
-            -o ../public/playground -org go-numerics -home "${{ steps.pages.outputs.base_url }}/" \
-            -accent '#7445ad' -accent-dark '#b794e4' notebooks/*.md
+            -o ../public/playground --org go-numerics --home "${{ steps.pages.outputs.base_url }}/" \
+            --accent '#7445ad' --accent-dark '#b794e4' notebooks/*.md
 
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v5
