@@ -2,7 +2,7 @@ module github.com/go-numerics/go-numerics.github.io/playground
 
 go 1.27.3
 
-require github.com/go-notebook/playground v0.2.0
+require github.com/go-notebook/playground v0.3.0
 
 require (
 	filippo.io/age v1.3.2 // indirect
@@ -81,7 +81,7 @@ require (
 	github.com/go-crdt/crdt v0.55.0 // indirect
 	github.com/go-dataframe/dataframe v0.1.0 // indirect
 	github.com/go-datetime/dates v0.1.0 // indirect
-	github.com/go-embedded-ruby/ruby v0.8.2 // indirect
+	github.com/go-embedded-ruby/ruby v0.8.3 // indirect
 	github.com/go-encryptions/unixcrypt v0.1.0 // indirect
 	github.com/go-facter/facter v0.0.0-20260830120958-454b72e642ab // indirect
 	github.com/go-fft/fft v0.23.0 // indirect
@@ -294,7 +294,7 @@ require (
 	github.com/go-ruby-yaml/yaml v0.0.0-20260916104302-910ced2db1c7 // indirect
 	github.com/go-ruby-zeitwerk/zeitwerk v0.0.0-20260916104335-29169305e951 // indirect
 	github.com/go-ruby-zlib/zlib v0.0.0-20260927173414-e9d862990b6d // indirect
-	github.com/go-scikit/ruby v0.1.0 // indirect
+	github.com/go-scikit/ruby v0.1.2 // indirect
 	github.com/go-scss/scss v0.0.0-20260905061546-39932e01faa4 // indirect
 	github.com/go-simd/adler32 v0.0.0-20260923204409-4db2a9281622 // indirect
 	github.com/go-simd/base64 v0.0.0-20260903220000-c04f5883bb18 // indirect
