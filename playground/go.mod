@@ -2,7 +2,7 @@ module github.com/go-numerics/go-numerics.github.io/playground
 
 go 1.27.3
 
-require github.com/go-notebook/playground v0.3.0
+require github.com/go-notebook/playground v0.4.0
 
 require (
 	filippo.io/age v1.3.2 // indirect
