@@ -2,7 +2,7 @@ module github.com/go-numerics/go-numerics.github.io/playground
 
 go 1.27.3
 
-require github.com/go-notebook/playground v0.4.0
+require github.com/go-notebook/playground v0.6.0
 
 require (
 	filippo.io/age v1.3.2 // indirect
@@ -81,6 +81,7 @@ require (
 	github.com/go-crdt/crdt v0.55.0 // indirect
 	github.com/go-dataframe/dataframe v0.1.0 // indirect
 	github.com/go-datetime/dates v0.1.0 // indirect
+	github.com/go-embedded-julia/julia v0.2.0 // indirect
 	github.com/go-embedded-ruby/ruby v0.8.3 // indirect
 	github.com/go-encryptions/unixcrypt v0.1.0 // indirect
 	github.com/go-facter/facter v0.0.0-20260830120958-454b72e642ab // indirect
@@ -104,7 +105,7 @@ require (
 	github.com/go-mustache/mustache v0.1.0 // indirect
 	github.com/go-ndarray/ndarray v0.12.0 // indirect
 	github.com/go-nokogiri/nokogiri v0.1.0 // indirect
-	github.com/go-notebook/notebook v0.4.0 // indirect
+	github.com/go-notebook/notebook v0.6.0 // indirect
 	github.com/go-numerics/integrate v0.2.0 // indirect
 	github.com/go-numerics/optimize v0.2.0 // indirect
 	github.com/go-numerics/special v0.1.0 // indirect
@@ -189,7 +190,7 @@ require (
 	github.com/go-ruby-i18n/i18n v0.0.0-20260916094015-15d33383fb6e // indirect
 	github.com/go-ruby-images/images v0.0.0-20260927173248-d1b4499ced38 // indirect
 	github.com/go-ruby-ipaddr/ipaddr v0.0.0-20260916094116-8c16b4082722 // indirect
-	github.com/go-ruby-irb/irb v0.0.0-20260916094148-b11dd34a8d63 // indirect
+	github.com/go-ruby-irb/irb v0.1.0 // indirect
 	github.com/go-ruby-jbuilder/jbuilder v0.0.0-20260916094222-db456ca7e642 // indirect
 	github.com/go-ruby-jekyll/jekyll v0.0.0-20260907185853-82fc8b8e7b41 // indirect
 	github.com/go-ruby-json/json v0.0.0-20260916094324-3ddd0f57b467 // indirect
@@ -250,7 +251,7 @@ require (
 	github.com/go-ruby-rdoc/rdoc v0.0.0-20260916101528-7ed1d61f5088 // indirect
 	github.com/go-ruby-redis/redis v0.0.0-20260916101628-3b91d134e9dc // indirect
 	github.com/go-ruby-regexp/regexp v0.1.1 // indirect
-	github.com/go-ruby-reline/reline v0.0.0-20260916101734-37c7d2c11d74 // indirect
+	github.com/go-ruby-reline/reline v0.1.0 // indirect
 	github.com/go-ruby-resolv/resolv v0.0.0-20260916101809-a2b1b027ae6d // indirect
 	github.com/go-ruby-resque/resque v0.0.0-20260903192756-dc5f8e3f2e80 // indirect
 	github.com/go-ruby-rexml/rexml v0.0.0-20260916101905-c8e846bf8b6e // indirect
@@ -405,7 +406,7 @@ require (
 	golang.org/x/net v0.60.0 // indirect
 	golang.org/x/sync v0.24.0 // indirect
 	golang.org/x/sys v0.49.0 // indirect
-	golang.org/x/term v0.46.0 // indirect
+	golang.org/x/term v0.47.0 // indirect
 	golang.org/x/text v0.42.0 // indirect
 	golang.org/x/time v0.16.0 // indirect
 	google.golang.org/genproto/googleapis/api v0.0.0-20260706201446-f0a921348800 // indirect
