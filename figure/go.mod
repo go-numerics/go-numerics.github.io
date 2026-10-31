@@ -1,6 +1,6 @@
 module github.com/go-numerics/go-numerics.github.io/figure
 
-go 1.27.2
+go 1.27.3
 
 require (
 	github.com/go-numerics/integrate v0.2.0
