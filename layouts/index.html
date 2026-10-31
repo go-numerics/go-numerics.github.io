@@ -57,7 +57,7 @@
     <h2>The numerical calls notebooks <i>make most</i>.</h2>
     <p class="lead">A census of 339 scientific notebooks set optimize's order — <code>minimize</code>, <code>minimize_scalar</code>, scalar roots, <code>root</code>, <code>least_squares</code> and <code>curve_fit</code>, <code>linprog</code> — and integrate and special cover <code>quad</code>, <code>solve_ivp</code> and the functions every statistic is computed with. Each Go function names the reference call it corresponds to.</p>
     <div class="grid">
-      <div class="card"><div class="ico">📉</div><h3>Optimisation and roots</h3><p>Nelder–Mead, Powell, CG, BFGS, Newton-CG and L-BFGS-B; SLSQP with bounds, equality and inequality constraints; Brent, Ridder and Newton for scalar roots; MINPACK's hybrid method for systems.</p></div>
+      <div class="card"><div class="ico">📉</div><h3>Optimisation and roots</h3><p>Nelder–Mead, Powell, CG, BFGS, Newton-CG and L-BFGS-B; SLSQP and an interior-point method (trust-constr) with bounds, equality and inequality constraints; Brent, Ridder and Newton for scalar roots; MINPACK's hybrid method for systems.</p></div>
       <div class="card"><div class="ico">📈</div><h3>Least squares and fits</h3><p>Levenberg–Marquardt and trust-region reflective with bounds and robust losses; <code>CurveFit</code> with the parameter covariance; linear programming with duals.</p></div>
       <div class="card"><div class="ico">∫</div><h3>Quadrature</h3><p>QUADPACK ported from the netlib Fortran: singularities, infinite ranges, oscillatory and algebraic weights, Cauchy principal values; double, triple and N-dimensional integrals.</p></div>
       <div class="card"><div class="ico">🌀</div><h3>ODE solvers</h3><p>RK45, RK23, DOP853, Radau and BDF with events and dense output, and an automatic Runge–Kutta/BDF switch for problems that turn stiff.</p></div>
@@ -91,6 +91,7 @@
           <tr class="win"><td>Rosenbrock n=100, BFGS (optimize)</td><td>14.8 ms</td><td>87.9 ms</td><td class="xm">5.9×</td></tr>
           <tr class="win"><td>Rosenbrock n=100, L-BFGS-B (optimize)</td><td>6.36 ms</td><td>23.2 ms</td><td class="xm">3.7×</td></tr>
           <tr class="win"><td>SLSQP, Hock–Schittkowski 71 (optimize)</td><td>5.59 µs</td><td>114 µs</td><td class="xm">20×</td></tr>
+          <tr class="win"><td>trust-constr, Hock–Schittkowski 71 (optimize)</td><td>523 µs</td><td>33.9 ms</td><td class="xm">65×</td></tr>
           <tr class="lose"><td>curve_fit, 10⁴ points, LM (optimize)</td><td>4.13 ms</td><td>2.78 ms</td><td class="xm">0.67×</td></tr>
           <tr class="lose"><td>curve_fit, 10⁴ points, TRF (optimize)</td><td>5.97 ms</td><td>4.61 ms</td><td class="xm">0.77×</td></tr>
           <tr class="win"><td>∫₀¹ log x/√x, Quad (integrate)</td><td>4.7 µs</td><td>30.1 µs</td><td class="xm">6×</td></tr>

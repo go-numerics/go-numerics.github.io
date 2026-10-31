@@ -25,7 +25,7 @@ disableKinds = ['taxonomy', 'term', 'rss', 'sitemap', '404']
   name  = "optimize"
   kind  = "library"
   href  = "https://github.com/go-numerics/optimize"
-  blurb = "Minimisation (Nelder–Mead, Powell, CG, BFGS, Newton-CG, L-BFGS-B), constrained minimisation (SLSQP: bounds, equality and inequality constraints), scalar and system roots (Brent, MINPACK hybrd), nonlinear least squares (Levenberg–Marquardt, trust-region reflective, robust losses), curve fitting with covariance, linear programming (simplex, interior point)."
+  blurb = "Minimisation (Nelder–Mead, Powell, CG, BFGS, Newton-CG, L-BFGS-B), constrained minimisation (SLSQP and the trust-constr interior-point method: bounds, equality and inequality constraints), scalar and system roots (Brent, MINPACK hybrd), nonlinear least squares (Levenberg–Marquardt, trust-region reflective, robust losses), curve fitting with covariance, linear programming (simplex, interior point)."
 [[params.repos]]
   name  = "integrate"
   kind  = "library"
@@ -61,6 +61,9 @@ disableKinds = ['taxonomy', 'term', 'rss', 'sitemap', '404']
 [[params.checks]]
   name = "SLSQP on Hock–Schittkowski"
   what = "100 of 100 statuses and 88 of 100 runs on SciPy's exact path (nit, nfev, njev, multipliers) over 36 Hock–Schittkowski problems and 10 stress cases; on each of the other 12, SciPy's own arm64 and x86_64 wheels disagree with each other. (optimize v0.3.0)"
+[[params.checks]]
+  name = "trust-constr on the same set"
+  what = "The interior-point method on the same 100 runs: success or failure as SciPy on all 100, every successful objective within 1e-5 of SciPy's or 1e-4 of the optimum; 59 to 68 runs on SciPy's exact path, where SciPy's own two wheels disagree on 35. (optimize v0.4.0)"
 [[params.checks]]
   name = "MINPACK and HiGHS"
   what = "`Root`/`Fsolve`: 23 of 23 runs with identical counts, status and message, x bit-identical. `Linprog`: 46 of 46 statuses against HiGHS, objective error at most 1.8e-15 with the simplex. (optimize)"
