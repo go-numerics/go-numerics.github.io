@@ -25,7 +25,7 @@ disableKinds = ['taxonomy', 'term', 'rss', 'sitemap', '404']
   name  = "optimize"
   kind  = "library"
   href  = "https://github.com/go-numerics/optimize"
-  blurb = "Minimisation (Nelder–Mead, Powell, CG, BFGS, Newton-CG, L-BFGS-B), constrained minimisation (SLSQP and the trust-constr interior-point method: bounds, equality and inequality constraints), quadratic programming (<code>Quadprog</code>: Goldfarb–Idnani active set and OSQP v1.0.0's ADMM, dense or sparse), scalar and system roots (Brent, MINPACK hybrd), nonlinear least squares (Levenberg–Marquardt, trust-region reflective, robust losses), curve fitting with covariance, linear programming (simplex, interior point)."
+  blurb = "Minimisation (Nelder–Mead, Powell, CG, BFGS, Newton-CG, L-BFGS-B), constrained minimisation (SLSQP and the trust-constr interior-point method: bounds, equality and inequality constraints), quadratic programming (<code>Quadprog</code>: Goldfarb–Idnani active set and OSQP v1.0.0's ADMM, dense or sparse), global optimisation (differential evolution, basin hopping and DIRECT, on SciPy's exact random streams), scalar and system roots (Brent, MINPACK hybrd), nonlinear least squares (Levenberg–Marquardt, trust-region reflective, robust losses), curve fitting with covariance, linear programming (simplex, interior point)."
 [[params.repos]]
   name  = "integrate"
   kind  = "library"
@@ -67,6 +67,9 @@ disableKinds = ['taxonomy', 'term', 'rss', 'sitemap', '404']
 [[params.checks]]
   name = "Quadratic programming against OSQP"
   what = "`Quadprog`'s ADMM runs exactly OSQP v1.0.0's iterations (same status, iteration and ρ-update counts) on 38 of 38 planted and 12 of 12 sparse cases, and on 25 of 25 generated benchmark instances; on 33 Maros–Mészáros problems it reaches Clarabel's objective on 27 and ends with OSQP's own status on the other 6. The active set is checked against Clarabel and the quadprog package. (optimize v0.5.0)"
+[[params.checks]]
+  name = "Global optimisation against SciPy"
+  what = "`DifferentialEvolution` without polishing: 296 of 296 runs bit-identical to SciPy 1.18.1 (final population, energies, counts), constraints and integer variables included, for both seeding forms (PCG64, MT19937). `Basinhopping`: SciPy's accept decisions on 224 of 224 runs, 136 bit-identical. `Direct`: 618 arithmetic runs bit-identical. Over 100 seeds on 21 of SciPy's own benchmark functions the success counts agree (equal on 16 of 16 DE functions, Fisher p > 0.4 on all 8 basin-hopping ones). (optimize v0.6.0)"
 [[params.checks]]
   name = "MINPACK and HiGHS"
   what = "`Root`/`Fsolve`: 23 of 23 runs with identical counts, status and message, x bit-identical. `Linprog`: 46 of 46 statuses against HiGHS, objective error at most 1.8e-15 with the simplex. (optimize)"
