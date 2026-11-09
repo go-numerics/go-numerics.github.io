@@ -82,18 +82,18 @@
   <section id="speed" style="padding-top:10px"><div class="wrap">
     <span class="eyebrow">Speed</span>
     <h2>Mostly faster than SciPy, <i>and not everywhere</i>.</h2>
-    <p class="lead">Medians of interleaved Go and SciPy 1.18.1 runs on a shared, loaded 16-core Apple M4 Max, from each library's <code>docs/perf.md</code>. SciPy's numbers include its Python callbacks, which is most of its time on small problems; the documentation gives them without, too. The rows in the library's colour are where SciPy is faster.</p>
+    <p class="lead">Medians of interleaved Go and SciPy 1.18.1 runs on one core of a shared 16-core Apple M4 Max, from each library's <code>docs/perf.md</code>; the rows marked refbench were started below a 1-minute load of 8, the others on a loaded host. SciPy's numbers include its Python callbacks, which is most of its time on small problems; the documentation gives them without, too. The rows in the library's colour are where SciPy is faster.</p>
     <div class="tablewrap">
       <table class="bench">
         <thead><tr><th>case</th><th>go-numerics</th><th>SciPy 1.18.1</th><th>SciPy / Go</th></tr></thead>
         <tbody>
-          <tr class="win"><td>Brentq, x³ − 2x − 5 (optimize)</td><td>0.27 µs</td><td>8.6 µs</td><td class="xm">32×</td></tr>
-          <tr class="win"><td>Rosenbrock n=100, BFGS (optimize)</td><td>14.8 ms</td><td>87.9 ms</td><td class="xm">5.9×</td></tr>
-          <tr class="win"><td>Rosenbrock n=100, L-BFGS-B (optimize)</td><td>6.36 ms</td><td>23.2 ms</td><td class="xm">3.7×</td></tr>
+          <tr class="win"><td>Brentq, x³ − 2x − 5 (optimize, refbench 2026-11-09)</td><td>0.13 µs</td><td>3.9 µs</td><td class="xm">30×</td></tr>
+          <tr class="lose"><td>Rosenbrock n=100, BFGS (optimize, refbench 2026-11-09; bit-exact SciPy update, <a href="https://github.com/go-numerics/optimize/issues/53">optimize#53</a>)</td><td>170 ms</td><td>46.4 ms</td><td class="xm">0.27×</td></tr>
+          <tr class="win"><td>Rosenbrock n=100, L-BFGS-B (optimize, refbench 2026-11-09)</td><td>4.70 ms</td><td>12.1 ms</td><td class="xm">2.6×</td></tr>
           <tr class="win"><td>SLSQP, Hock–Schittkowski 71 (optimize)</td><td>5.59 µs</td><td>114 µs</td><td class="xm">20×</td></tr>
           <tr class="win"><td>trust-constr, Hock–Schittkowski 71 (optimize)</td><td>523 µs</td><td>33.9 ms</td><td class="xm">65×</td></tr>
-          <tr class="lose"><td>curve_fit, 10⁴ points, LM (optimize)</td><td>4.13 ms</td><td>2.78 ms</td><td class="xm">0.67×</td></tr>
-          <tr class="lose"><td>curve_fit, 10⁴ points, TRF (optimize)</td><td>5.97 ms</td><td>4.61 ms</td><td class="xm">0.77×</td></tr>
+          <tr class="win"><td>curve_fit, 10⁴ points, LM, model per point / <code>Model.Vec</code> (optimize, refbench 2026-11-09)</td><td>1.34 / 0.88 ms</td><td>1.42 ms</td><td class="xm">1.06× / 1.59×</td></tr>
+          <tr class="win"><td>curve_fit, 10⁴ points, TRF, model per point / <code>Model.Vec</code> (optimize, refbench 2026-11-09)</td><td>1.91 / 1.34 ms</td><td>2.37 ms</td><td class="xm">1.24× / 1.74×</td></tr>
           <tr class="win"><td>∫₀¹ log x/√x, Quad (integrate)</td><td>4.7 µs</td><td>30.1 µs</td><td class="xm">6×</td></tr>
           <tr class="win"><td>Lotka–Volterra, RK45 (integrate)</td><td>18.1 µs</td><td>1.67 ms</td><td class="xm">92×</td></tr>
           <tr class="win"><td>Van der Pol μ=1000, Radau (integrate)</td><td>199.9 µs</td><td>37.72 ms</td><td class="xm">189×</td></tr>
