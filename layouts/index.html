@@ -97,8 +97,8 @@
           <tr class="win"><td>∫₀¹ log x/√x, Quad (integrate)</td><td>4.7 µs</td><td>30.1 µs</td><td class="xm">6×</td></tr>
           <tr class="win"><td>Lotka–Volterra, RK45 (integrate)</td><td>18.1 µs</td><td>1.67 ms</td><td class="xm">92×</td></tr>
           <tr class="win"><td>Van der Pol μ=1000, Radau (integrate)</td><td>199.9 µs</td><td>37.72 ms</td><td class="xm">189×</td></tr>
-          <tr><td>Gamma, 10⁶ points, one thread (special) — measured on an older version (<a href="https://github.com/go-numerics/special/pull/1">special#1</a>, before the float64 kernels of <a href="https://github.com/go-numerics/special/pull/7">#7</a> and <a href="https://github.com/go-numerics/special/pull/42">#42</a>); re-measurement pending</td><td>45.5 ns/elem</td><td>13.4 ns/elem</td><td class="xm">0.30×</td></tr>
-          <tr><td>Gamma, 10⁶ points, <code>special/nd</code> on 16 cores — measured on the same older version; re-measurement pending</td><td>6.4 ns/elem</td><td>13.4 ns/elem</td><td class="xm">2.1×</td></tr>
+          <tr class="lose"><td>Gamma, 10⁴ points, one thread (special v0.5.7, refbench 2026-11-09, host load 5.1–7.1; <a href="https://github.com/go-numerics/special/issues/33">special#33</a>)</td><td>15.6 ns/elem</td><td>13.8 ns/elem</td><td class="xm">0.88×</td></tr>
+          <tr class="lose"><td>Gamma, 10⁴ points, <code>special/nd</code> on one goroutine (special v0.5.7, same run)</td><td>14.6 ns/elem</td><td>13.7 ns/elem</td><td class="xm">0.94×</td></tr>
         </tbody>
       </table>
     </div>
