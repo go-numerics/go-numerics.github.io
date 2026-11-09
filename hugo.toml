@@ -35,7 +35,7 @@ disableKinds = ['taxonomy', 'term', 'rss', 'sitemap', '404']
   name  = "special"
   kind  = "library"
   href  = "https://github.com/go-numerics/special"
-  blurb = "Gamma, beta, error and normal functions, incomplete gamma and beta and their inverses, Bessel, zeta, combinatorics, logistic helpers and complete elliptic integrals, each measured in ULPs against mpmath; <code>special/nd</code> applies them element-wise to go-ndarray arrays, across cores."
+  blurb = "Gamma, beta, error and normal functions, incomplete gamma and beta and their inverses, Bessel, zeta, combinatorics, logistic helpers and complete elliptic integrals, each measured in ULPs against mpmath; <code>special/nd</code> applies them element-wise to go-ndarray arrays, across cores. Release v0.5.7: <code>I1</code>, <code>I1e</code>, <code>K1</code> and <code>K1e</code> from fitted octave interpolants, faster and more accurate; <code>Comb</code>, <code>Factorial</code>, <code>Factorial2</code> and <code>Xlog1py</code> faster with the same bits."
 [[params.repos]]
   name  = "docs"
   kind  = "site"
