@@ -1,9 +1,10 @@
-// Command figure draws the landing page's figure, static/img/figure.svg:
+// Command figure draws the landing page's figure, static/img/figure.svg,
+// and the values the page reads out under the pointer, static/img/figure.json:
 //
-//	cd figure && go run . > ../static/img/figure.svg
+//	cd figure && go run . -readout ../static/img/figure.json > ../static/img/figure.svg
 //
 // The page's terminal shows this file from func main on, read at build
-// time, and the CI draws the figure again and fails if a byte differs.
+// time, and the CI draws both again and fails if a byte differs.
 package main
 
 import (
@@ -52,4 +53,5 @@ func main() {
 	if err := fig.SaveSVG(os.Stdout); err != nil {
 		panic(err)
 	}
+	writeReadout(fig, ax, sol) // the solver's values under the page's pointer
 }

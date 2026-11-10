@@ -17,7 +17,7 @@ disableKinds = ['taxonomy', 'term', 'rss', 'sitemap', '404']
   unsafe = true
 
 [params]
-  description = "go-numerics: numerical methods in pure Go (CGO=0) on go-ndarray. Optimisation and root finding, quadrature and ODE solvers, special functions, ported from their reference algorithms and tested against recorded answers."
+  description = "go-numerics: numerical methods in pure Go (CGO=0) on go-ndarray. Optimisation and root finding, quadrature and ODE solvers, special functions: fast, and checked against SciPy and mpmath."
 
 # Every field below is rendered by layouts/index.html (cards in #repos, the
 # strip under the hero). A field nothing renders does not stay true.
