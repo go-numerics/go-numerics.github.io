@@ -46,7 +46,7 @@ var rootFamily = Family{Name: "Scalar root", Cases: []Case{
 		},
 	}.make(),
 	rootCase{
-		name: "x³ − 2x − 5 = 0", doc: "Wallis's cubic, the equation Newton solved",
+		name: "x^3 - 2x - 5 = 0", doc: "Wallis's cubic, the equation Newton solved",
 		a: "2", b: "3", x0: "2", vlo: 1.5, vhi: 3.5,
 		build: func(*Args) (*rootFn, error) {
 			return &rootFn{

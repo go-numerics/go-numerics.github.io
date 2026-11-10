@@ -41,7 +41,7 @@ var fitFamily = Family{Name: "Curve fit", Cases: []Case{
 		truth: []float64{3, 1.5, 0.8}, lo: -2, hi: 5, p0: "1;1;1",
 	}.make(),
 	fitModel{
-		name: "logistic curve", doc: "L / (1 + e^(−k·(x − x₀)))",
+		name: "logistic curve", doc: "L / (1 + e^(−k·(x − x0)))",
 		f:   func(x float64, p []float64) float64 { return p[0] / (1 + math.Exp(-p[1]*(x-p[2]))) },
 		goF: "p[0] / (1 + math.Exp(-p[1]*(x-p[2])))", pyF: "p[0]/(1 + np.exp(-p[1]*(x - p[2])))",
 		truth: []float64{5, 1.2, 2}, lo: -2, hi: 6, p0: "1;1;1",
@@ -154,7 +154,8 @@ func (m fitModel) solve(method string, a *Args) (*run, error) {
 			{"true parameters", Gs(m.truth)},
 			{"max |popt − true|", G(worst)},
 			{"max |popt − true| / perr", G(zmax)},
-			{"rms residual (noise σ is " + G(noise) + ")", G(math.Sqrt(rss / float64(n)))},
+			{"noise σ put in the data", G(noise)},
+			{"rms residual", G(math.Sqrt(rss / float64(n)))},
 		}
 		out.Plots = m.plots(xs, ys, res.Popt)
 	}

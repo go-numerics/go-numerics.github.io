@@ -16,10 +16,11 @@ type Args struct {
 	text map[string]string
 }
 
-// ParseArgs reads "key=value, key=value" against the parameters a case takes.
-// An unknown key, a repeated key or a missing "=" is an error that names what
-// is accepted. Values are numbers ("1e-6", "inf", "pi", "pi/2", "2pi") or, for
-// vectors, numbers separated by ";".
+// ParseArgs reads "key=value" pairs, one per line or separated by commas,
+// against the parameters a case takes; a "#" starts a comment to the end of its
+// line. An unknown key, a repeated key or a missing "=" is an error that names
+// what is accepted. Values are numbers ("1e-6", "inf", "pi", "pi/2", "2pi") or,
+// for vectors, numbers separated by ";".
 func ParseArgs(s string, params []Param) (*Args, error) {
 	a := &Args{text: map[string]string{}}
 	known := make([]string, len(params))
@@ -28,7 +29,7 @@ func ParseArgs(s string, params []Param) (*Args, error) {
 		known[i] = p.Key
 	}
 	seen := map[string]bool{}
-	for _, field := range strings.Split(s, ",") {
+	for _, field := range strings.FieldsFunc(stripComments(s), func(r rune) bool { return r == ',' || r == '\n' }) {
 		field = strings.TrimSpace(field)
 		if field == "" {
 			continue
@@ -48,6 +49,17 @@ func ParseArgs(s string, params []Param) (*Args, error) {
 		a.text[k] = v
 	}
 	return a, nil
+}
+
+// stripComments removes each line's "#" comment.
+func stripComments(s string) string {
+	lines := strings.Split(s, "\n")
+	for i, l := range lines {
+		if k := strings.IndexByte(l, '#'); k >= 0 {
+			lines[i] = l[:k]
+		}
+	}
+	return strings.Join(lines, "\n")
 }
 
 // Float reads a number parameter.

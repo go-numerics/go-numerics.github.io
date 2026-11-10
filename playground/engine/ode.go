@@ -86,7 +86,7 @@ func buildLV(a *Args) (*odeProb, error) {
 			for _, y := range s.Y {
 				worst = math.Max(worst, math.Abs(inv(y)-v0)/math.Abs(v0))
 			}
-			return []Row{{"V(0), V = d·x − c·ln x + b·y − a·ln y", G(v0)}, {"max |V(t) − V(0)| / |V(0)| over the steps", G(worst)}}
+			return []Row{{"V(0)", G(v0)}, {"max drift of V", G(worst)}}
 		},
 		extra: func(s *integrate.Solution) []Plot {
 			x, y := column(s, 0), column(s, 1)
@@ -138,8 +138,8 @@ func buildVdP(a *Args) (*odeProb, error) {
 		}
 		ye, re := s.Y[len(s.Y)-1], ref.Y[len(ref.Y)-1]
 		return []Row{
-			{"reference y at the end (" + name + ")", Gs(re)},
-			{"max |y − reference| at the end", G(math.Max(math.Abs(ye[0]-re[0]), math.Abs(ye[1]-re[1])))},
+			{"reference y(tend) (" + name + ")", Gs(re)},
+			{"max |y - ref| at end", G(math.Max(math.Abs(ye[0]-re[0]), math.Abs(ye[1]-re[1])))},
 		}
 	}
 	p.extra = func(s *integrate.Solution) []Plot {
@@ -168,8 +168,8 @@ func buildStiff(a *Args) (*odeProb, error) {
 				worst = math.Max(worst, math.Abs(s.Y[i][0]-math.Cos(t)))
 			}
 			end := len(s.T) - 1
-			return []Row{{"exact y at the end, cos t", G(math.Cos(s.T[end]))},
-				{"max |y − cos t| over the steps", G(worst)}, {"|y − cos t| at the end", G(math.Abs(s.Y[end][0] - math.Cos(s.T[end])))}}
+			return []Row{{"exact y(tend)", G(math.Cos(s.T[end]))},
+				{"max |y - cos t|", G(worst)}, {"|y - cos t| at end", G(math.Abs(s.Y[end][0] - math.Cos(s.T[end])))}}
 		},
 	}, nil
 }

@@ -200,23 +200,14 @@ func Lookup(fi, ci, mi int) (*Case, string, error) {
 	return c, c.Methods[mi], nil
 }
 
-// DefaultArgs is the arguments line of a case with a method, every parameter at
-// its default.
+// DefaultArgs is the arguments text of a case with a method: one parameter per
+// line, at its default, with what it is after a "#" (which ParseArgs ignores).
 func DefaultArgs(c *Case, method string) string {
-	var parts []string
+	var lines []string
 	for _, p := range c.Params(method) {
-		parts = append(parts, p.Key+"="+p.Default)
+		lines = append(lines, p.Key+"="+p.Default+"  # "+p.Doc)
 	}
-	return strings.Join(parts, ", ")
-}
-
-// Hint lists the parameters of a case with a method and what each one is.
-func Hint(c *Case, method string) string {
-	var parts []string
-	for _, p := range c.Params(method) {
-		parts = append(parts, p.Key+": "+p.Doc)
-	}
-	return strings.Join(parts, " · ")
+	return strings.Join(lines, "\n")
 }
 
 // timeCall times bare. One call first; if it is short, enough more to fill

@@ -2,3 +2,7 @@ public/
 resources/
 .hugo_build.lock
 .DS_Store
+# The playground's build artifacts: the deploy builds both from this commit.
+/static/playground/playground.wasm
+/static/playground/wasm_exec.js
+/playground/coverage.out

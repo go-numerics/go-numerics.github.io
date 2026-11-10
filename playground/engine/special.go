@@ -72,36 +72,36 @@ var specialFamily = Family{Name: "Special functions", Cases: []Case{
 		},
 	}.make(),
 	specialCase{
-		name: "J₀(x)", doc: "Bessel function of the first kind",
+		name: "J0(x)", doc: "Bessel function of the first kind",
 		f: special.J0, goName: "J0", pyName: "j0", lo: "0.1", hi: "30", ylim: "1e6",
-		identity: "Wronskian J₁·Y₀ − J₀·Y₁ = 2/(πx), relative",
+		identity: "Wronskian J1·Y0 − J0·Y1 = 2/(πx), relative",
 		residual: func(x float64) (float64, bool) {
 			w := 2 / (math.Pi * x)
 			return relDiff(special.J1(x)*special.Y0(x)-special.J0(x)*special.Y1(x), w, w)
 		},
 	}.make(),
 	specialCase{
-		name: "Y₀(x)", doc: "Bessel function of the second kind, logarithmic at 0",
+		name: "Y0(x)", doc: "Bessel function of the second kind, logarithmic at 0",
 		f: special.Y0, goName: "Y0", pyName: "y0", lo: "0.1", hi: "30", ylim: "2",
-		identity: "Wronskian J₁·Y₀ − J₀·Y₁ = 2/(πx), relative",
+		identity: "Wronskian J1·Y0 − J0·Y1 = 2/(πx), relative",
 		residual: func(x float64) (float64, bool) {
 			w := 2 / (math.Pi * x)
 			return relDiff(special.J1(x)*special.Y0(x)-special.J0(x)*special.Y1(x), w, w)
 		},
 	}.make(),
 	specialCase{
-		name: "I₀(x)", doc: "modified Bessel function of the first kind, grows like eˣ",
+		name: "I0(x)", doc: "modified Bessel function of the first kind, grows like eˣ",
 		f: special.I0, goName: "I0", pyName: "i0", lo: "0", hi: "5", ylim: "1e6",
-		identity: "Wronskian I₀·K₁ + I₁·K₀ = 1/x, relative",
+		identity: "Wronskian I0·K1 + I1·K0 = 1/x, relative",
 		residual: func(x float64) (float64, bool) {
 			w := 1 / x
 			return relDiff(special.I0(x)*special.K1(x)+special.I1(x)*special.K0(x), w, w)
 		},
 	}.make(),
 	specialCase{
-		name: "K₀(x)", doc: "modified Bessel function of the second kind, decays like e⁻ˣ",
+		name: "K0(x)", doc: "modified Bessel function of the second kind, decays like e^-x",
 		f: special.K0, goName: "K0", pyName: "k0", lo: "0.05", hi: "5", ylim: "5",
-		identity: "Wronskian I₀·K₁ + I₁·K₀ = 1/x, relative",
+		identity: "Wronskian I0·K1 + I1·K0 = 1/x, relative",
 		residual: func(x float64) (float64, bool) {
 			w := 1 / x
 			return relDiff(special.I0(x)*special.K1(x)+special.I1(x)*special.K0(x), w, w)
@@ -199,7 +199,7 @@ func (s specialCase) solve(method string, a *Args) (*run, error) {
 		}
 	}
 	out.Summary = []Row{
-		{"points", fmt.Sprint(n)}, {"f(x = " + G(xs[0]) + ")", G(ys[0])}, {"f(x = " + G(xs[n-1]) + ")", G(ys[n-1])},
+		{"points", fmt.Sprint(n)}, {"f(first x)", G(ys[0])}, {"f(last x)", G(ys[n-1])},
 		{"min f (finite points)", G(ymin)}, {"max f (finite points)", G(ymax)}, {"sum of f (finite points)", G(sum)},
 	}
 	res := make([]float64, n)
@@ -216,7 +216,8 @@ func (s specialCase) solve(method string, a *Args) (*run, error) {
 	}
 	out.Check = []Row{
 		{"identity", s.identity},
-		{"max residual over " + fmt.Sprint(tested) + " testable points", G(worst)},
+		{"points tested", fmt.Sprint(tested)},
+		{"max residual", G(worst)},
 	}
 	if vector {
 		d := 0.0
@@ -248,8 +249,8 @@ func (s specialCase) code(vector bool, lo, hi float64, n int) (string, string) {
 	g.WriteString("ymin, ymax, sum := math.Inf(1), math.Inf(-1), 0.0\n")
 	g.WriteString("for _, y := range ys {\n\tif math.IsNaN(y) || math.IsInf(y, 0) {\n\t\tcontinue\n\t}\n\tymin, ymax, sum = math.Min(ymin, y), math.Max(ymax, y), sum+y\n}\n")
 	g.WriteString(printRow("points", "n"))
-	g.WriteString(printRow("f(x = "+G(lo)+")", "ys[0]"))
-	g.WriteString(printRow("f(x = "+G(lo+(hi-lo)*float64(n-1)/float64(n-1))+")", "ys[n-1]"))
+	g.WriteString(printRow("f(first x)", "ys[0]"))
+	g.WriteString(printRow("f(last x)", "ys[n-1]"))
 	g.WriteString(printRow("min f (finite points)", "ymin"))
 	g.WriteString(printRow("max f (finite points)", "ymax"))
 	g.WriteString(printRow("sum of f (finite points)", "sum"))

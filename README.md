@@ -22,8 +22,25 @@ hugo server
 | `hugo.yml` | builds on pull requests; builds and deploys to Pages on `main` |
 | `ci.yml` | the site builds and names every repository; the figure is what its program draws |
 | `links.yml` | every link and image of the built site resolves |
+| `playground.yml` | the playground: gofmt, vet, 100% coverage, the suites run as WebAssembly, and the browser proof in headless Chrome |
 
 BSD-3-Clause.
+
+## The playground
+
+<https://go-numerics.github.io/playground/> is go-numerics itself, compiled to
+WebAssembly, inside a go-widgets canvas application: pick a problem (scalar
+roots, minimisation, curve fitting, quadrature, ODE solvers, special
+functions), a solver and its parameters, and see the library's own numbers, a
+check of the answer against mathematics, a plot with the exact computed value
+under the pointer, the time of one call, and the equivalent Go and SciPy
+programs. It lives in `playground/` (a nested Go module; its README describes
+the layout and the proofs). `hugo.yml` builds the wasm at deploy time; it is
+never committed.
+
+The generic go-notebook playground, with the example notebooks, moved to
+<https://go-numerics.github.io/notebooks/> (`notebooks/`, built by the same
+workflow) and is linked from the playground's nav bar.
 
 ## The design is not here
 

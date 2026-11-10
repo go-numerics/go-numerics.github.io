@@ -103,8 +103,8 @@ func TestEveryCaseRuns(t *testing.T) {
 						t.Errorf("%s/%s/%s: plot %q has no first series", f.Name, c.Name, m, p.Name)
 					}
 				}
-				if Hint(&c, m) == "" || c.Doc == "" {
-					t.Errorf("%s/%s: no hint", f.Name, c.Name)
+				if !strings.Contains(DefaultArgs(&c, m), "  # ") || c.Doc == "" {
+					t.Errorf("%s/%s: no documented defaults", f.Name, c.Name)
 				}
 			}
 		}
@@ -231,7 +231,7 @@ func TestCurveFitRecoversTheTruth(t *testing.T) {
 			if z := num(t, noisy.Check, "max |popt − true| / perr"); z > 4 {
 				t.Errorf("%s %s: %g standard errors from the truth", c.Name, m, z)
 			}
-			rms := num(t, noisy.Check, "rms residual (noise σ is 0.05)")
+			rms := num(t, noisy.Check, "rms residual")
 			if rms < 0.02 || rms > 0.08 {
 				t.Errorf("%s %s: rms residual %g for noise 0.05", c.Name, m, rms)
 			}
@@ -252,7 +252,7 @@ func TestQuadratureAgainstAntiderivatives(t *testing.T) {
 		if d := num(t, r.Check, "|value − reference|"); d > 1e-8 {
 			t.Errorf("%s: |value − reference| = %g", c.Name, d)
 		}
-		if row(r.Check, "true error within the estimate") != "yes" {
+		if row(r.Check, "error within estimate") != "yes" {
 			t.Errorf("%s: the true error exceeds the estimate: %v", c.Name, r.Check)
 		}
 	}
@@ -282,7 +282,7 @@ func TestQuadratureAgainstAntiderivatives(t *testing.T) {
 	}
 	// Limits the antiderivative is not defined at.
 	r = exec(t, "Quadrature", "sin x", "Quad", "a=-inf, b=inf, limit=5")
-	if !strings.Contains(row(r.Check, "reference (antiderivative)"), "not defined") {
+	if !strings.Contains(row(r.Check, "reference"), "not defined") {
 		t.Errorf("sin over the line: %v", r.Check)
 	}
 }
@@ -301,15 +301,15 @@ func TestQuadratureErrorsAreTheLibrarys(t *testing.T) {
 func TestODEsAgainstInvariantsAndClosedForms(t *testing.T) {
 	for _, m := range odeMethods {
 		lv := exec(t, "ODE", "Lotka–Volterra", m, "rtol=1e-8, atol=1e-10")
-		if d := num(t, lv.Check, "max |V(t) − V(0)| / |V(0)| over the steps"); d > 1e-4 {
+		if d := num(t, lv.Check, "max drift of V"); d > 1e-4 {
 			t.Errorf("LV %s: V drifts by %g", m, d)
 		}
 		st := exec(t, "ODE", "stiff relaxation", m, "rtol=1e-8, atol=1e-10")
-		if d := num(t, st.Check, "max |y − cos t| over the steps"); d > 1e-4 {
+		if d := num(t, st.Check, "max |y - cos t|"); d > 1e-4 {
 			t.Errorf("stiff %s: off cos t by %g", m, d)
 		}
 		vp := exec(t, "ODE", "Van der Pol", m, "rtol=1e-9, atol=1e-11")
-		if d := num(t, vp.Check, "max |y − reference| at the end"); d > 1e-3 {
+		if d := num(t, vp.Check, "max |y - ref| at end"); d > 1e-3 {
 			t.Errorf("Van der Pol %s: %g from the reference", m, d)
 		}
 	}
@@ -331,11 +331,11 @@ func TestSpecialFunctionIdentities(t *testing.T) {
 		for _, m := range c.Methods {
 			r := exec(t, "Special functions", c.Name, m, "")
 			var worst float64
-			for _, row := range r.Check {
-				if strings.HasPrefix(row.Name, "max residual") {
-					worst, _ = strconv.ParseFloat(row.Value, 64)
-					if !strings.Contains(row.Name, "testable") || strings.Contains(row.Name, " 0 testable") {
-						t.Errorf("%s: no testable point: %s", c.Name, row.Name)
+			for _, cr := range r.Check {
+				if cr.Name == "max residual" {
+					worst, _ = strconv.ParseFloat(cr.Value, 64)
+					if n, _ := strconv.Atoi(row(r.Check, "points tested")); n < 100 {
+						t.Errorf("%s: only %s points tested", c.Name, row(r.Check, "points tested"))
 					}
 				}
 			}
@@ -351,11 +351,11 @@ func TestSpecialFunctionIdentities(t *testing.T) {
 	}
 	// Known values.
 	r := exec(t, "Special functions", "Γ(x)", "scalar", "lo=0.5, hi=0.5, n=2")
-	if v := num(t, r.Summary, "f(x = 0.5)"); math.Abs(v-math.Sqrt(math.Pi)) > 1e-15 {
+	if v := num(t, r.Summary, "f(first x)"); math.Abs(v-math.Sqrt(math.Pi)) > 1e-15 {
 		t.Errorf("Γ(1/2) = %v", v)
 	}
 	r = exec(t, "Special functions", "K(m)", "scalar", "lo=0, hi=0, n=2")
-	if v := num(t, r.Summary, "f(x = 0)"); math.Abs(v-math.Pi/2) > 1e-15 {
+	if v := num(t, r.Summary, "f(first x)"); math.Abs(v-math.Pi/2) > 1e-15 {
 		t.Errorf("K(0) = %v", v)
 	}
 }
@@ -440,12 +440,38 @@ func TestLibraryErrorsComeBackWithTheirResults(t *testing.T) {
 	// Equal limits: an empty range, drawn on a unit window.
 	r = exec(t, "Quadrature", "sin x", "Quad", "a=1, b=1")
 	if v := num(t, r.Summary, "value"); v != 0 {
-		t.Errorf("∫₁¹ = %v", v)
+		t.Errorf("∫1¹ = %v", v)
 	}
 	// Limits the wrong way round.
 	r = exec(t, "Quadrature", "sin x", "Quad", "a=pi, b=0")
 	if v := num(t, r.Summary, "value"); math.Abs(v+2) > 1e-14 {
 		t.Errorf("∫π⁰ sin = %v", v)
+	}
+}
+
+func TestArgumentsTextTakesLinesCommasAndComments(t *testing.T) {
+	params := []Param{{"a", "1", "first"}, {"b", "2", "second"}, {"c", "3", "third"}}
+	a, err := ParseArgs("a=10  # the first\n   \nb = 20, c=30 # c, with a comma, is a comment\n", params)
+	if err != nil {
+		t.Fatal(err)
+	}
+	if x, _ := a.Float("a"); x != 10 {
+		t.Errorf("a = %v", x)
+	}
+	if x, _ := a.Float("b"); x != 20 {
+		t.Errorf("b = %v", x)
+	}
+	if x, _ := a.Float("c"); x != 30 {
+		t.Errorf("c = %v", x)
+	}
+	// The defaults text parses back to the defaults.
+	c := &Case{Params: func(string) []Param { return params }}
+	d, err := ParseArgs(DefaultArgs(c, ""), params)
+	if err != nil {
+		t.Fatal(err)
+	}
+	if x, _ := d.Float("c"); x != 3 {
+		t.Errorf("default c = %v", x)
 	}
 }
 

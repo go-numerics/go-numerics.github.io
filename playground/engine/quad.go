@@ -28,12 +28,12 @@ var quadMethods = []string{"Quad", "Romberg", "FixedQuad"}
 
 var quadFamily = Family{Name: "Quadrature", Cases: []Case{
 	quadCase{
-		name: "sin x", doc: "smooth: ∫₀^π sin x dx = 2",
+		name: "sin x", doc: "smooth: ∫0^π sin x dx = 2",
 		f: math.Sin, anti: func(x float64) float64 { return -math.Cos(x) },
 		goF: "math.Sin(x)", pyF: "np.sin(x)", a: "0", b: "pi", vlo: -1, vhi: 4, ylim: 1e6,
 	}.make(),
 	quadCase{
-		name: "1/√x", doc: "an integrable singularity at 0: ∫₀¹ x^(−1/2) dx = 2",
+		name: "1/√x", doc: "an integrable singularity at 0: ∫0¹ x^(−1/2) dx = 2",
 		f:    func(x float64) float64 { return 1 / math.Sqrt(x) },
 		anti: func(x float64) float64 { return 2 * math.Sqrt(x) },
 		goF:  "1 / math.Sqrt(x)", pyF: "1/np.sqrt(x)", a: "0", b: "1", vlo: 0, vhi: 1, ylim: 20,
@@ -45,7 +45,7 @@ var quadFamily = Family{Name: "Quadrature", Cases: []Case{
 		goF:  "math.Exp(-x * x)", pyF: "np.exp(-x**2)", a: "-inf", b: "inf", vlo: -4, vhi: 4, ylim: 1e6,
 	}.make(),
 	quadCase{
-		name: "ln x", doc: "a logarithmic singularity at 0: ∫₀¹ ln x dx = −1",
+		name: "ln x", doc: "a logarithmic singularity at 0: ∫0¹ ln x dx = −1",
 		f: math.Log,
 		anti: func(x float64) float64 {
 			if x == 0 {
@@ -185,12 +185,12 @@ func (q quadCase) solve(method string, a *Args) (*run, error) {
 	ref := q.reference(lo, hi)
 	if finite(ref) {
 		d := math.Abs(value - ref)
-		out.Check = []Row{{"reference (antiderivative)", G(ref)}, {"|value − reference|", G(d)}}
+		out.Check = []Row{{"reference", G(ref)}, {"|value − reference|", G(d)}}
 		if method == "Quad" {
-			out.Check = append(out.Check, Row{"true error within the estimate", boolText(d <= abserr)})
+			out.Check = append(out.Check, Row{"error within estimate", boolText(d <= abserr)})
 		}
 	} else {
-		out.Check = []Row{{"reference (antiderivative)", "not defined at these limits"}}
+		out.Check = []Row{{"reference", "not defined at these limits"}}
 	}
 	out.Plots = q.plots(wlo, whi, t)
 	out.Go, out.Python = q.code(method, lo, hi, epsabs, epsrel, limit, points, tol, rtol, divmax, n)
