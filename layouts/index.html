@@ -81,8 +81,8 @@
 
   <section id="speed" style="padding-top:10px"><div class="wrap">
     <span class="eyebrow">Speed</span>
-    <h2>Mostly faster than SciPy, <i>and not everywhere</i>.</h2>
-    <p class="lead">Medians of interleaved Go and SciPy 1.18.1 runs on one core of a shared 16-core Apple M4 Max, from each library's <code>docs/perf.md</code>; the rows marked refbench were started below a 1-minute load of 8, the others on a loaded host. SciPy's numbers include its Python callbacks, which is most of its time on small problems; the documentation gives them without, too. The rows in the library's colour are where SciPy is faster.</p>
+    <h2>Faster than SciPy on every case below, <i>not yet on every function</i>.</h2>
+    <p class="lead">Medians of interleaved Go and SciPy 1.18.1 runs on one core of a shared 16-core Apple M4 Max, from each library's <code>docs/perf.md</code>; the rows marked refbench were started below a 1-minute load of 8, the others on a loaded host. SciPy's numbers include its Python callbacks, which is most of its time on small problems; the documentation gives them without, too. No case below is slower than SciPy today. The functions that still are, among them the integer-order Bessel functions, the incomplete beta function and Softmax, are listed with their ratios in <a href="https://github.com/go-numerics/special/issues/33">special#33</a>.</p>
     <div class="tablewrap">
       <table class="bench">
         <thead><tr><th>case</th><th>go-numerics</th><th>SciPy 1.18.1</th><th>SciPy / Go</th></tr></thead>
