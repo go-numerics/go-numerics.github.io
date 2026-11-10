@@ -13,7 +13,11 @@ and the page's terminal shows that file, read at build time. With `-readout`
 it also writes `static/img/figure.json`: the dense output at 3001 times and the
 accepted steps, as full float64, and the plot area of the SVG. The page reads
 it to show, under the pointer (or the arrow keys), the solver's exact values.
-The `ci` workflow writes both again and fails if a byte differs.
+The `ci` workflow writes both again and fails if a byte differs — on an arm64
+runner, because Go fuses multiply-adds on arm64 and not on amd64, and the JSON's
+full float64 values differ in the last bit between the two: regenerate it on an
+arm64 machine (a Mac). A headless-Chrome test (`figure/browser_test.go`) then
+checks that the built page prints exactly those values.
 
 ```sh
 cd figure && go run . -readout ../static/img/figure.json > ../static/img/figure.svg

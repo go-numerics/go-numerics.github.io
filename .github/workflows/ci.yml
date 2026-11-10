@@ -38,9 +38,16 @@ jobs:
   # versions figure/go.mod names. The page shows that program as the terminal
   # in the hero, so a figure that no longer matches it would be a claim the
   # page cannot back. This draws it again and compares the bytes.
+  #
+  # On arm64: Go fuses x*y+z into one rounding there (FMA) and not on amd64,
+  # so DOP853's float64 values in figure.json differ in the last bit between
+  # the two (measured on this PR's first run: the SVG, whose coordinates are
+  # rounded, was identical; the JSON was not). The committed values are the
+  # arm64 ones, as a Mac writes them, and this job checks them where they
+  # are reproducible bit for bit.
   figure:
     name: the figure is what its program draws
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04-arm
     steps:
       - uses: actions/checkout@v7
       - uses: actions/setup-go@v7
@@ -58,9 +65,20 @@ jobs:
             echo "::error::static/img/figure.svg or figure.json differs from what figure/main.go writes: run 'cd figure && go run . -readout ../static/img/figure.json > ../static/img/figure.svg' and commit both"
             exit 1
           fi
-      # The built page, in headless Chrome (preinstalled on the runner): the
-      # pointer and the arrow keys must read exactly the values figure.json
-      # holds.
+
+  # The built page, in headless Chrome (preinstalled on the amd64 runner,
+  # not on arm64): the pointer and the arrow keys must print exactly the
+  # values the committed figure.json holds. It reads the JSON, it does not
+  # recompute it, so it does not depend on the platform.
+  readout:
+    name: the page prints the solver's values
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-go@v7
+        with:
+          go-version-file: figure/go.mod
+          cache-dependency-path: figure/go.sum
       - uses: peaceiris/actions-hugo@v3
         with:
           hugo-version: "0.168.0"
