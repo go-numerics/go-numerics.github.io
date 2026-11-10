@@ -44,6 +44,14 @@ func TestBrowserReadout(t *testing.T) {
 	defer srv.Close()
 
 	opts := append(chromedp.DefaultExecAllocatorOptions[:], chromedp.WindowSize(1280, 1000))
+	// GitHub's Ubuntu 24.04 runners forbid the unprivileged user namespaces
+	// Chrome's sandbox needs (AppArmor), and Chrome then never opens its
+	// DevTools socket ("websocket url timeout reached"). The page served is
+	// this repository's own, from a local server: only there is the sandbox
+	// dropped.
+	if os.Getenv("CI") != "" {
+		opts = append(opts, chromedp.NoSandbox)
+	}
 	if c := os.Getenv("CHROME"); c != "" {
 		opts = append(opts, chromedp.ExecPath(c))
 	}
