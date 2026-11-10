@@ -47,12 +47,26 @@ jobs:
         with:
           go-version-file: figure/go.mod
           cache-dependency-path: figure/go.sum
-      - name: Draw the figure
+      - name: Draw the figure and its pointer readout
         working-directory: figure
-        run: go run . > ../static/img/figure.svg
-      - name: The committed figure is the one drawn
+        run: go run . -readout ../static/img/figure.json > ../static/img/figure.svg
+      # The readout is the values the page prints under the pointer: a stale
+      # one would show numbers the solver no longer returns.
+      - name: The committed figure and readout are the ones drawn
         run: |
-          if ! git diff --exit-code --stat -- static/img/figure.svg; then
-            echo "::error::static/img/figure.svg differs from what figure/main.go draws: run 'cd figure && go run . > ../static/img/figure.svg' and commit it"
+          if ! git diff --exit-code --stat -- static/img/figure.svg static/img/figure.json; then
+            echo "::error::static/img/figure.svg or figure.json differs from what figure/main.go writes: run 'cd figure && go run . -readout ../static/img/figure.json > ../static/img/figure.svg' and commit both"
             exit 1
           fi
+      # The built page, in headless Chrome (preinstalled on the runner): the
+      # pointer and the arrow keys must read exactly the values figure.json
+      # holds.
+      - uses: peaceiris/actions-hugo@v3
+        with:
+          hugo-version: "0.168.0"
+          extended: true
+      - name: Build the site
+        run: hugo --minify -d "$RUNNER_TEMP/site"
+      - name: The readout prints the solver's values
+        working-directory: figure
+        run: SITE_DIR="$RUNNER_TEMP/site" go test -v .

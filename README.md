@@ -9,11 +9,14 @@ the shared stylesheet `layouts/partials/styles.html`, and `[params.brand]` in
 
 The figure is real: `figure/main.go` solves Lotka–Volterra with
 go-numerics/integrate and draws it with go-plot into `static/img/figure.svg`,
-and the page's terminal shows that file, read at build time. The `ci`
-workflow draws the figure again and fails if a byte differs.
+and the page's terminal shows that file, read at build time. With `-readout`
+it also writes `static/img/figure.json`: the dense output at 3001 times and the
+accepted steps, as full float64, and the plot area of the SVG. The page reads
+it to show, under the pointer (or the arrow keys), the solver's exact values.
+The `ci` workflow writes both again and fails if a byte differs.
 
 ```sh
-cd figure && go run . > ../static/img/figure.svg
+cd figure && go run . -readout ../static/img/figure.json > ../static/img/figure.svg
 hugo server
 ```
 
