@@ -194,6 +194,7 @@ func (q quadCase) solve(method string, a *Args) (*run, error) {
 	}
 	out.Plots = q.plots(wlo, whi, t)
 	out.Go, out.Python = q.code(method, lo, hi, epsabs, epsrel, limit, points, tol, rtol, divmax, n)
+	out.Ruby, out.Julia = q.rubyJulia(method, lo, hi, epsabs, epsrel, limit, points, tol, rtol, divmax, n)
 	return &run{res: out, bare: func() { _ = call(nil) }}, nil
 }
 

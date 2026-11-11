@@ -211,7 +211,14 @@ async function run(scheme, dpr, vp = DESKTOP, opts = {}) {
     check(tag + "the Go program is shown", d.code.startsWith("package main") && d.code.includes("integrate.SolveIVP"), d.code.slice(0, 40));
     const lang = (await rects()).lang;
     await reveal(lang);
-    await clickAt(canvasBox.x + lang.x + lang.w * 3 / 4, canvasBox.y + lang.y + lang.h / 2); // Go | SciPy
+    // Go | Ruby | Julia | SciPy: four tabs, the second, third and fourth in turn.
+    await clickAt(canvasBox.x + lang.x + lang.w * 3 / 8, canvasBox.y + lang.y + lang.h / 2);
+    d = await debug();
+    check(tag + "the Ruby tab says there is no Ruby program for an ODE, and why", d.lang === 1 && /^# No program: go-embedded-ruby has no ODE module/.test(d.code), d.code.slice(0, 60));
+    await clickAt(canvasBox.x + lang.x + lang.w * 5 / 8, canvasBox.y + lang.y + lang.h / 2);
+    d = await debug();
+    check(tag + "the Julia tab shows an OrdinaryDiffEq program, saying where it ran", d.lang === 2 && /OrdinaryDiffEqHighOrderRK/.test(d.code) && /DP8\(\)/.test(d.code) && /go-embedded-julia does not run Base/.test(d.code), d.code.slice(0, 80));
+    await clickAt(canvasBox.x + lang.x + lang.w * 7 / 8, canvasBox.y + lang.y + lang.h / 2);
     d = await debug();
     check(tag + "the SciPy tab shows SciPy", d.code.startsWith("import numpy as np") && d.code.includes("solve_ivp") && d.code.includes('method="DOP853"'), d.code.slice(0, 40));
     await browser.defaultBrowserContext().overridePermissions(new URL(url).origin, ["clipboard-read", "clipboard-write", "clipboard-sanitized-write"]);

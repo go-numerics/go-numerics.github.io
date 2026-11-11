@@ -233,6 +233,7 @@ func (c odeCase) solve(method string, a *Args) (*run, error) {
 		out.Plots = c.plots(p, sol)
 	}
 	out.Go, out.Python = c.code(p, method, rtol, atol)
+	out.Ruby, out.Julia = c.rubyJulia(p, method, rtol, atol)
 	return &run{res: out, bare: func() { _, _ = integrate.SolveIVP(p.f, [2]float64{0, p.tend}, p.y0, opts) }}, nil
 }
 

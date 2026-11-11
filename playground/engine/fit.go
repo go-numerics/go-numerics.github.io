@@ -160,6 +160,7 @@ func (m fitModel) solve(method string, a *Args) (*run, error) {
 		out.Plots = m.plots(xs, ys, res.Popt)
 	}
 	out.Go, out.Python = m.code(method, n, noise, seed, p0, maxfev, xs, ys)
+	out.Ruby, out.Julia = m.rubyJulia(method, p0, maxfev, xs, ys)
 	return &run{res: out, bare: func() { _, _ = call(bareModel) }}, nil
 }
 

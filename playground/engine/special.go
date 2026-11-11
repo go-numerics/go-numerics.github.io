@@ -234,6 +234,7 @@ func (s specialCase) solve(method string, a *Args) (*run, error) {
 			Series: []Series{{Label: "residual", X: xs, Y: lg, Raw: res, RawName: "residual"}}},
 	}
 	out.Go, out.Python = s.code(vector, lo, hi, n)
+	out.Ruby, out.Julia = s.rubyJulia(vector, lo, hi, n)
 	return &run{res: out, bare: sweep}, nil
 }
 
