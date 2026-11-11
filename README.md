@@ -40,8 +40,10 @@ WebAssembly, inside a go-widgets canvas application: pick a problem (scalar
 roots, minimisation, curve fitting, quadrature, ODE solvers, special
 functions), a solver and its parameters, and see the library's own numbers, a
 check of the answer against mathematics, a plot with the exact computed value
-under the pointer, the time of one call, and the equivalent Go and SciPy
-programs. It lives in `playground/` (a nested Go module; its README describes
+under the pointer, the time of one call, and the equivalent Go, Ruby, Julia
+and SciPy programs (the Ruby ones run on go-embedded-ruby, which binds
+go-numerics; the Julia ones use Julia's packages and are checked on julia, not
+on go-embedded-julia, which does not run Base yet). It lives in `playground/` (a nested Go module; its README describes
 the layout and the proofs). `hugo.yml` builds the wasm at deploy time; it is
 never committed.
 

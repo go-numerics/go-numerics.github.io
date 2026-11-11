@@ -59,6 +59,10 @@ type Result struct {
 	Plots   []Plot
 	Go      string
 	Python  string
+	// Ruby and Julia are programs too, or the reason there is none (see
+	// HasProgram): go-embedded-ruby binds go-numerics but not all of it, and
+	// the Julia ones use Julia's packages.
+	Ruby, Julia string
 	// Status is the library's own verdict (its flag or message); Converged is
 	// its boolean.
 	Status    string
@@ -180,6 +184,7 @@ func Execute(fi, ci, mi int, args string) (*Result, error) {
 	if err != nil {
 		return nil, err
 	}
+	r.res.Ruby, r.res.Julia = headers(r.res.Ruby, r.res.Julia)
 	r.res.Per, r.res.Reps = timeCall(r.bare)
 	return r.res, nil
 }

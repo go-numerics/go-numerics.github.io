@@ -20,11 +20,13 @@ import (
 // Code languages of the code panel, in tab order.
 const (
 	LangGo = iota
+	LangRuby
+	LangJulia
 	LangPython
 )
 
 // CodeTabs are the titles of the code panel's tabs.
-var CodeTabs = []string{"Go", "SciPy"}
+var CodeTabs = []string{"Go", "Ruby", "Julia", "SciPy"}
 
 // Table is what the result table shows: the library's own numbers, then the
 // checks against mathematics.
@@ -120,7 +122,7 @@ func New() *ViewModel {
 	}
 	v.Run = mvvm.NewCommand(v.run, nil)
 	v.Defaults = mvvm.NewCommand(v.resetArgs, nil)
-	v.CopyCode = mvvm.NewCommand(v.copyCode, func() bool { return v.Code.Get() != "" })
+	v.CopyCode = mvvm.NewCommand(v.copyCode, func() bool { return v.Code.Get() != "" && engine.HasProgram(v.Code.Get()) })
 	mvvm.BindCanExecute(v.CopyCode, v.Code)
 
 	v.FamilyIndex.SubscribeChanged(v.onFamily)
@@ -312,6 +314,10 @@ func (v *ViewModel) showCode() {
 	switch {
 	case v.last == nil:
 		v.Code.Set("")
+	case v.CodeLang.Get() == LangRuby:
+		v.Code.Set(v.last.Ruby)
+	case v.CodeLang.Get() == LangJulia:
+		v.Code.Set(v.last.Julia)
 	case v.CodeLang.Get() == LangPython:
 		v.Code.Set(v.last.Python)
 	default:

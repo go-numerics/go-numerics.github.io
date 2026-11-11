@@ -23,7 +23,37 @@ its own error text), a **check against mathematics** (a closed form, a
 conserved quantity, an identity between functions, a reference solution; never
 the library against itself), plots with a hover readout of the exact values
 the library computed at the pointer, the time of one **uninstrumented** call in
-the browser, and the equivalent Go program and SciPy call, both copyable.
+the browser, and the equivalent code, copyable, in four tabs: Go, Ruby, Julia,
+SciPy.
+
+## Ruby and Julia
+
+* **Ruby** is [go-embedded-ruby](https://github.com/go-embedded-ruby/ruby),
+  which binds go-numerics itself (`Optimize`, `Integrate`, `Special`): a Ruby
+  program calls the same functions as the page and prints the same numbers. It
+  binds less than the page offers, and where it does not, the tab says so
+  instead of showing a program nobody ran: no ODE module at all, no analytic
+  gradient (`jac:`) for `minimize`, no `method:` or `maxfev:` for `curve_fit`,
+  no `…To` vector form. `TestRubyPrintsWhatThePageShows` builds go-embedded-ruby
+  (`rubycheck/` pins its version), runs every Ruby program and compares each row
+  with the page's: exactly on amd64, to 1e-6 elsewhere (arm64 fuses
+  multiply-adds in the test binary's own closures, not in the interpreter).
+* **Julia** is Julia's own packages — Roots, Optim, LsqFit, QuadGK,
+  OrdinaryDiffEq, SpecialFunctions, Elliptic — because go-embedded-julia does
+  not run Base yet (its README: M3 in progress), so no program here runs on it;
+  each says so in its first line. `TestJuliaAgreesWithThePage` runs every one on
+  julia 1.12.6 with the packages `engine/testdata/juliaenv` pins and compares the
+  answer (root, minimiser, parameters, integral, the state at the end of the
+  span, the sweep's statistics) with the page's, to the problem's tolerance: the
+  algorithms are the packages', so the counts differ. Where a package has no
+  equivalent the tab says so: no Brent–Haggerty `brenth` (Roots), no Powell
+  (Optim), LM only (LsqFit), no Romberg (QuadGK). LSODA maps to
+  `AutoTsit5(Rosenbrock23())`, BDF to `QNDF`, which are the same idea, not the
+  same method. The test needs julia: `PLAYGROUND_JULIA=julia` and, in CI,
+  `PLAYGROUND_REQUIRE_JULIA=1`.
+* Running either in the page is not done: go-embedded-ruby is a 23 MB wasm
+  (go-ndarray's playground fetches it on demand) and go-embedded-julia has no
+  wasm yet.
 
 ## Layout
 

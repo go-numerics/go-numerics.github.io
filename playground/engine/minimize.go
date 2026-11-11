@@ -299,6 +299,7 @@ func (mp minProblem) solve(method string, a *Args) (*run, error) {
 		out.Plots = mp.plots(x0, res.X, ref, iters, fvals)
 	}
 	out.Go, out.Python = mp.code(method, x0, mode, tol, maxiter)
+	out.Ruby, out.Julia = mp.rubyJulia(method, x0, mode, tol, maxiter)
 	return &run{res: out, bare: func() { _, _ = call(nil, false) }}, nil
 }
 

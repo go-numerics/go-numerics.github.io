@@ -449,6 +449,111 @@ func TestLibraryErrorsComeBackWithTheirResults(t *testing.T) {
 	}
 }
 
+// Which families have a Ruby and a Julia program, and which say why not.
+func TestRubyAndJuliaProgramsOrTheirReasons(t *testing.T) {
+	ruby, julia := map[string][2]int{}, map[string][2]int{} // family -> programs, reasons
+	for fi, f := range Families {
+		for ci, c := range f.Cases {
+			for mi, m := range c.Methods {
+				r, err := Execute(fi, ci, mi, DefaultArgs(&c, m))
+				if err != nil {
+					t.Fatal(err)
+				}
+				for _, x := range []struct {
+					code  string
+					tally map[string][2]int
+				}{{r.Ruby, ruby}, {r.Julia, julia}} {
+					v := x.tally[f.Name]
+					if HasProgram(x.code) {
+						v[0]++
+					} else {
+						v[1]++
+						if len(x.code) < 40 || !strings.HasSuffix(x.code, ".\n") {
+							t.Errorf("%s/%s/%s: a reason that says nothing: %q", f.Name, c.Name, m, x.code)
+						}
+					}
+					x.tally[f.Name] = v
+				}
+			}
+		}
+	}
+	// go-embedded-ruby has no ODE module and, by default, the analytic gradient
+	// and TRF options are ones it lacks; Julia has every family.
+	if ruby["ODE"][0] != 0 || ruby["ODE"][1] != 18 {
+		t.Errorf("Ruby ODE: %v", ruby["ODE"])
+	}
+	if r := exec(t, "Minimisation", "Booth", "BFGS", "grad=fd"); !HasProgram(r.Ruby) {
+		t.Errorf("no Ruby program for finite-difference minimisation: %q", r.Ruby)
+	}
+	for _, fam := range []string{"Scalar root", "Quadrature", "Special functions", "Curve fit"} {
+		if ruby[fam][0] == 0 {
+			t.Errorf("no Ruby program for %s", fam)
+		}
+	}
+	for fam, v := range julia {
+		if v[0] == 0 {
+			t.Errorf("no Julia program for %s", fam)
+		}
+	}
+	if HasProgram(none("because")) || !HasProgram("puts 1") {
+		t.Error("HasProgram")
+	}
+}
+
+// The options a default run leaves out.
+func TestRubyAndJuliaSpellTheOptions(t *testing.T) {
+	has := func(code string, parts ...string) {
+		t.Helper()
+		for _, p := range parts {
+			if !strings.Contains(code, p) {
+				t.Errorf("%q is not in:\n%s", p, code)
+			}
+		}
+	}
+	r := exec(t, "Minimisation", "Booth", "BFGS", "grad=fd\ntol=1e-6\nmaxiter=50")
+	has(r.Ruby, `method: "BFGS"`, "tol: 1e-06", "maxiter: 50", "Optimize.minimize")
+	has(r.Julia, "g_tol = 1e-06", "iterations = 50", "autodiff = AutoFiniteDiff()", "using Optim, ADTypes, FiniteDiff")
+	r = exec(t, "Minimisation", "Booth", "BFGS", "")
+	if HasProgram(r.Ruby) || !strings.Contains(r.Ruby, "grad=fd") {
+		t.Errorf("an analytic gradient has no Ruby program: %q", r.Ruby)
+	}
+	has(r.Julia, "optimize(f, g!,")
+	r = exec(t, "Minimisation", "Booth", "Nelder-Mead", "grad=fd\ntol=1e-6")
+	has(r.Julia, "NelderMead()")
+	if strings.Contains(r.Julia, "g_tol") {
+		t.Error("Nelder-Mead takes no g_tol")
+	}
+	if r = exec(t, "Minimisation", "Booth", "Powell", ""); HasProgram(r.Julia) {
+		t.Error("Optim.jl has no Powell")
+	}
+	r = exec(t, "Curve fit", "Gaussian peak", "LM", "maxfev=500")
+	if HasProgram(r.Ruby) || !strings.Contains(r.Julia, "maxIter = 500") {
+		t.Errorf("maxfev: ruby %q julia %q", r.Ruby, r.Julia)
+	}
+	r = exec(t, "Quadrature", "step at 1/3", "Quad", "points=0.3333333333333333")
+	has(r.Ruby, "points: [0.3333333333333333]", "x < 1.0/3 ? 1.0 : 2.0")
+	has(r.Julia, "quadgk(f, 0.0, 0.3333333333333333, 1.0;")
+	r = exec(t, "Quadrature", "sin x", "Quad", "a=-inf\nb=inf")
+	has(r.Ruby, "-Float::INFINITY, Float::INFINITY")
+	has(r.Julia, "-Inf, Inf")
+	r = exec(t, "Quadrature", "sin x", "FixedQuad", "")
+	has(r.Julia, "gauss(5, 0.0, 3.141592653589793)")
+	r = exec(t, "Scalar root", "cos x = x", "Newton", "")
+	has(r.Ruby, "fprime: fprime", "Optimize.newton(1.0,")
+	has(r.Julia, "Roots.Newton()")
+	r = exec(t, "Special functions", "K(m)", "scalar", "")
+	has(r.Julia, "using Elliptic", "Elliptic.K(x)")
+	if got := rbNum(math.NaN()) + jlNum(math.NaN()); got != "Float::NANNaN" {
+		t.Errorf("NaN literals: %s", got)
+	}
+	if got := rbNum(math.Inf(1)) + jlNum(math.Inf(1)) + jlNum(math.Inf(-1)); got != "Float::INFINITYInf-Inf" {
+		t.Errorf("Inf literals: %s", got)
+	}
+	if rbNums([]float64{1, 2.5}) != "[1.0, 2.5]" || jlNums([]float64{3}) != "[3.0]" {
+		t.Error("vector literals")
+	}
+}
+
 func TestArgumentsTextTakesLinesCommasAndComments(t *testing.T) {
 	params := []Param{{"a", "1", "first"}, {"b", "2", "second"}, {"c", "3", "third"}}
 	a, err := ParseArgs("a=10  # the first\n   \nb = 20, c=30 # c, with a comma, is a comment\n", params)

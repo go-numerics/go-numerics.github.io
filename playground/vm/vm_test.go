@@ -162,10 +162,26 @@ func TestCodeTabsAndCopy(t *testing.T) {
 	if !strings.Contains(v.Code.Get(), "optimize.Brentq") {
 		t.Errorf("Go: %q", v.Code.Get())
 	}
+	v.CodeLang.Set(LangRuby)
+	if !strings.Contains(v.Code.Get(), "Optimize.brentq") || !strings.Contains(v.Code.Get(), "go-embedded-ruby") {
+		t.Errorf("Ruby: %q", v.Code.Get())
+	}
+	v.CodeLang.Set(LangJulia)
+	if !strings.Contains(v.Code.Get(), "find_zero") || !strings.Contains(v.Code.Get(), "go-embedded-julia does not run Base") {
+		t.Errorf("Julia: %q", v.Code.Get())
+	}
 	v.CodeLang.Set(LangPython)
 	if !strings.Contains(v.Code.Get(), "root_scalar") {
 		t.Errorf("SciPy: %q", v.Code.Get())
 	}
+	// A tab with no program shows why, and offers nothing to copy.
+	v.FamilyIndex.Set(4) // ODE: go-embedded-ruby has no ODE module
+	v.CodeLang.Set(LangRuby)
+	if !strings.HasPrefix(v.Code.Get(), "# No program: ") || v.CopyCode.CanExecute() {
+		t.Errorf("Ruby ODE: %q, copy %v", v.Code.Get(), v.CopyCode.CanExecute())
+	}
+	v.FamilyIndex.Set(0)
+	v.CodeLang.Set(LangPython)
 	v.Run.Execute() // a new run keeps the chosen language
 	if !strings.Contains(v.Code.Get(), "root_scalar") {
 		t.Error("a run reset the language")

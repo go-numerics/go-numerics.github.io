@@ -202,6 +202,7 @@ func (rc rootCase) solve(method string, a *Args) (*run, error) {
 		out.Plots = rc.plots(fn, method, lo, hi, x0, res.Root, t)
 	}
 	out.Go, out.Python = rc.code(fn, method, lo, hi, x0, tol, rtol, maxiter)
+	out.Ruby, out.Julia = rc.rubyJulia(fn, method, lo, hi, x0, tol, rtol, maxiter)
 	return &run{res: out, bare: func() { _, _ = call(nil) }}, nil
 }
 
