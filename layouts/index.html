@@ -20,7 +20,7 @@
   <div class="hero"><div class="wrap">
     <div>
       <h1 class="head">Numerical methods, in pure Go.<br><span class="accent">Fast, and mathematically right.</span></h1>
-      <p class="sub">go-numerics is the numerical layer of the Go scientific stack built on <b>go-ndarray</b>: <b>optimisation and root finding</b>, <b>quadrature and ODE solvers</b>, and <b>special functions</b>. <b>Correct</b>: every result is compared with an answer computed independently — SciPy, the netlib Fortran, and mpmath at 192 and 320 bits — and errors are measured, in ulps where it matters. <b>Fast</b>: timed against SciPy on one core, and <a href="#speed"><u>faster on every case below</u></a>. No cgo, no assembly.</p>
+      <p class="sub">go-numerics is the numerical layer of the Go scientific stack built on <b>go-ndarray</b>: <b>optimisation and root finding</b>, <b>quadrature and ODE solvers</b>, and <b>special functions</b>. <b>Correct</b>: every result is compared with an answer computed independently — SciPy, the netlib Fortran, and mpmath at 192 and 320 bits — and errors are measured, in ulps where it matters. <b>Fast</b>: timed against SciPy on one core, and <a href="#speed"><u>faster on every case below</u></a>.</p>
       {{/* [[params.cta]] in hugo.toml: the kit renders the row */}}
       {{ partial "cta.html" . }}
       <div class="trust"><span><b>116/124</b> integrals on the reference path</span><span><b>418/419</b> special-function regions at or below SciPy's error</span><span><b>100%</b> test coverage</span></div>
@@ -158,8 +158,6 @@
       <div class="card"><div class="ico">🌀</div><h3>ODE solvers</h3><p>RK45, RK23, DOP853, Radau and BDF with events and dense output, and an automatic Runge–Kutta/BDF switch for problems that turn stiff.</p></div>
       <div class="card"><div class="ico">Γ</div><h3>Special functions</h3><p>Gamma, beta, erf and the normal distribution, incomplete gamma and beta and their inverses, Bessel functions of real order, zeta, elliptic integrals — and <code>special/cmplx</code>, a drop-in <code>math/cmplx</code> whose every part is measured in ulps against mpmath (<code>Tanh(400+1i)</code> is 1, not NaN).</p></div>
       <div class="card"><div class="ico">🧮</div><h3>On go-ndarray</h3><p>Curve-fit data, covariances, LP matrices and ODE solutions are <code>*ndarray.Array</code>; <code>special/nd</code> applies a function element-wise with broadcasting, across cores.</p></div>
-      <div class="card"><div class="ico">📦</div><h3>Pure Go, CGO=0</h3><p>No cgo, no assembly. CI runs the tests on amd64 and arm64 and under emulation on riscv64, loong64, ppc64le and s390x.</p></div>
-      <div class="card"><div class="ico">⚖️</div><h3>BSD-3-Clause</h3><p>Every repository of the organization. Ported code keeps its attribution in place.</p></div>
     </div>
   </div></section>
 
