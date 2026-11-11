@@ -36,7 +36,9 @@ SciPy.
   gradient (`jac:`) for `minimize`, no `method:` or `maxfev:` for `curve_fit`,
   no `…To` vector form. `TestRubyPrintsWhatThePageShows` builds go-embedded-ruby
   (`rubycheck/` pins its version), runs every Ruby program and compares each row
-  with the page's: exactly on amd64, to 1e-6 elsewhere (arm64 fuses
+  with the page's, with go-numerics at the versions the playground pins (go-embedded-ruby
+  v0.8.5 itself pins older ones, whose BFGS takes another path: `rubycheck/go.mod`
+  overrides them): exactly on amd64, to 1e-6 elsewhere (arm64 fuses
   multiply-adds in the test binary's own closures, not in the interpreter).
 * **Julia** is Julia's own packages — Roots, Optim, LsqFit, QuadGK,
   OrdinaryDiffEq, SpecialFunctions, Elliptic — because go-embedded-julia does

@@ -99,11 +99,11 @@ require (
 	github.com/go-logr/logr v1.4.4 // indirect
 	github.com/go-logr/stdr v1.2.2 // indirect
 	github.com/go-mustache/mustache v0.1.0 // indirect
-	github.com/go-ndarray/ndarray v0.28.0 // indirect
+	github.com/go-ndarray/ndarray v0.34.0 // indirect
 	github.com/go-nokogiri/nokogiri v0.1.0 // indirect
-	github.com/go-numerics/integrate v0.2.0 // indirect
-	github.com/go-numerics/optimize v0.3.1 // indirect
-	github.com/go-numerics/special v0.2.0 // indirect
+	github.com/go-numerics/integrate v0.2.2 // indirect
+	github.com/go-numerics/optimize v0.8.0 // indirect
+	github.com/go-numerics/special v0.7.0 // indirect
 	github.com/go-opentype/fonts v0.10.0 // indirect
 	github.com/go-opentype/opentype v0.16.1 // indirect
 	github.com/go-opentype/shape v0.7.0 // indirect
@@ -294,7 +294,9 @@ require (
 	github.com/go-simd/adler32 v0.1.0 // indirect
 	github.com/go-simd/base64 v0.1.0 // indirect
 	github.com/go-simd/crc32 v0.0.0-20260903220012-5f164e0e0487 // indirect
+	github.com/go-simd/floats v0.13.0 // indirect
 	github.com/go-simd/hex v0.0.0-20260903220024-a8d22a843218 // indirect
+	github.com/go-sparse/sparse v0.3.0 // indirect
 	github.com/go-sql-driver/mysql v1.10.1 // indirect
 	github.com/go-statistics/stats v0.1.0 // indirect
 	github.com/go-typeset/bidi v0.3.0 // indirect
