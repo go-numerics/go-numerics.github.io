@@ -82,7 +82,7 @@ jobs:
         with:
           go-version-file: playground/go.mod
           cache-dependency-path: playground/go.sum
-      - uses: julia-actions/setup-julia@v2
+      - uses: julia-actions/setup-julia@v3
         with:
           version: "1.12.6"
       - uses: julia-actions/cache@v2
