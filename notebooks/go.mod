@@ -1,6 +1,6 @@
 module github.com/go-numerics/go-numerics.github.io/notebooks
 
-go 1.27.3
+go 1.27.4
 
 require github.com/go-notebook/playground v0.7.1
 

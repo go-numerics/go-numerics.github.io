@@ -1,6 +1,6 @@
 module github.com/go-numerics/go-numerics.github.io/playground
 
-go 1.27.3
+go 1.27.4
 
 require (
 	github.com/go-ndarray/ndarray v0.34.0

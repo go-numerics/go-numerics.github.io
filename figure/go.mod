@@ -1,6 +1,6 @@
 module github.com/go-numerics/go-numerics.github.io/figure
 
-go 1.27.3
+go 1.27.4
 
 require (
 	github.com/chromedp/cdproto v0.0.0-20250403032234-65de8f5d025b
