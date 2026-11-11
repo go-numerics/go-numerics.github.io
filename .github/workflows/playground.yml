@@ -85,7 +85,7 @@ jobs:
       - uses: julia-actions/setup-julia@v2
         with:
           version: "1.12.6"
-      - uses: julia-actions/cache@v2
+      - uses: julia-actions/cache@v3
       - name: install the packages the Manifest pins
         run: julia --project=engine/testdata/juliaenv -e 'using Pkg; Pkg.instantiate(); Pkg.precompile()'
       - name: run every Julia program
