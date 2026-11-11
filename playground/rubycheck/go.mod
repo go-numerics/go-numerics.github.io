@@ -1,6 +1,6 @@
 module github.com/go-numerics/go-numerics.github.io/playground/rubycheck
 
-go 1.27.3
+go 1.27.4
 
 require github.com/go-embedded-ruby/ruby v0.8.5
 
