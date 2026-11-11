@@ -33,6 +33,11 @@ jobs:
               || { echo "::error::$repo is not on the page"; exit 1; }
           done
           echo "the page names every repository this org has"
+      # The hero's buttons are the kit's (cta.html, data-kit-cta), in its
+      # order and styles, and nothing beside the mantra strip says it twice:
+      # at the landingkit version go.mod pins.
+      - name: the page is the kit's (landingkit check)
+        run: go run github.com/go-fleettools/landingkit/cmd/landingkit check public
 
   # static/img/figure.svg is what figure/main.go draws, with the library
   # versions figure/go.mod names. The page shows that program as the terminal

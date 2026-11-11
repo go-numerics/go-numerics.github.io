@@ -19,6 +19,18 @@ disableKinds = ['taxonomy', 'term', 'rss', 'sitemap', '404']
 [params]
   description = "go-numerics: numerical methods in pure Go (CGO=0) on go-ndarray. Optimisation and root finding, quadrature and ODE solvers, special functions: fast, and checked against SciPy and mpmath."
 
+# The hero's buttons: rendered by landingkit's cta.html, in the kit's order and
+# styles (docs = btn-primary with the book, try = the red btn-try with the
+# browser icon); `landingkit check` refuses a row written by hand.
+[[params.cta]]
+  kind  = "docs"
+  href  = "https://go-numerics.github.io/docs/"
+  label = "Read the documentation →"
+[[params.cta]]
+  kind  = "try"
+  href  = "/playground/"
+  label = "Try it in your browser →"
+
 # Every field below is rendered by layouts/index.html (cards in #repos, the
 # strip under the hero). A field nothing renders does not stay true.
 [[params.repos]]
