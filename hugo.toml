@@ -19,6 +19,13 @@ disableKinds = ['taxonomy', 'term', 'rss', 'sitemap', '404']
 [params]
   description = "go-numerics: numerical methods in pure Go (CGO=0) on go-ndarray. Optimisation and root finding, quadrature and ODE solvers, special functions: fast, and checked against SciPy and mpmath."
 
+# The line under the mantra strip: the architectures the libraries' tests RUN
+# on (optimize, integrate and special ci.yml: native amd64 and arm64 lanes,
+# qemu lanes for the other four). 386, Windows, the BSDs and wasm are only
+# cross-compiled there, so they are not claimed here.
+[params.mantra]
+  goarch = ["amd64", "arm64", "riscv64", "loong64", "ppc64le", "s390x"]
+
 # The hero's buttons: rendered by landingkit's cta.html, in the kit's order and
 # styles (docs = btn-primary with the book, try = the red btn-try with the
 # browser icon); `landingkit check` refuses a row written by hand.
