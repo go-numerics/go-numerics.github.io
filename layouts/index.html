@@ -11,7 +11,7 @@
 <body class="lm">
   <header class="nav"><div class="wrap">
     <a class="brand" href="/"><img class="glyph" src="/img/logo.svg" width="32" height="32" alt="go-numerics logo"> {{ .Site.Title }}</a>
-    <nav><a href="#figure">Example</a><a href="#features">Why</a><a href="#exact">Checks</a><a href="#speed">Speed</a><a href="#repos">Repositories</a><a href="/playground/">Playground</a></nav>
+    <nav><a href="#figure">Example</a><a href="#features">Why</a><a href="#exact">Checks</a><a href="#speed">Speed</a><a href="#repos">Repositories</a><a href="/playground/">Playground</a><a href="/notebooks/">Notebooks</a></nav>
     {{ partial "theme-toggle.html" . }}
   </div></header>
   {{ partial "fork-ribbon.html" "https://github.com/go-numerics" }}
@@ -22,6 +22,7 @@
       <p class="sub">go-numerics is the numerical layer of the Go scientific stack built on <b>go-ndarray</b>: <b>optimisation and root finding</b>, <b>quadrature and ODE solvers</b>, and <b>special functions</b>. <b>Correct</b>: every result is compared with an answer computed independently — SciPy, the netlib Fortran, and mpmath at 192 and 320 bits — and errors are measured, in ulps where it matters. <b>Fast</b>: timed against SciPy on one core, and <a href="#speed"><u>faster on every case below</u></a>. No cgo, no assembly.</p>
       <div class="cta">
         <a class="btn btn-primary" href="https://go-numerics.github.io/docs/">{{ partial "icons/book.html" . }}Read the documentation →</a>
+        <a class="btn btn-ghost" href="/playground/">Try it in the browser →</a>
       </div>
       <div class="trust"><span><b>116/124</b> integrals on the reference path</span><span><b>418/419</b> special-function regions at or below SciPy's error</span><span><b>100%</b> test coverage</span></div>
     </div>
