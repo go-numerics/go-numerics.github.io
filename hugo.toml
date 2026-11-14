@@ -23,9 +23,6 @@ disableKinds = ['taxonomy', 'term', 'rss', 'sitemap', '404']
 # on (optimize, integrate and special ci.yml: native amd64 and arm64 lanes,
 # qemu lanes for the other four). 386, Windows, the BSDs and wasm are only
 # cross-compiled there, so they are not claimed here.
-[params.commons]
-  url = ""
-
 [params.mantra]
   goarch = ["amd64", "arm64", "riscv64", "loong64", "ppc64le", "s390x"]
 
