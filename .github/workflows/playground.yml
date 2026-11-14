@@ -84,7 +84,7 @@ jobs:
           cache-dependency-path: playground/go.sum
       - uses: julia-actions/setup-julia@v2
         with:
-          version: "1.12.6"
+          version: "v1.13.4"
       - uses: julia-actions/cache@v2
       - name: install the packages the Manifest pins
         run: julia --project=engine/testdata/juliaenv -e 'using Pkg; Pkg.instantiate(); Pkg.precompile()'
@@ -110,7 +110,7 @@ jobs:
           node-version: "24"
       - uses: peaceiris/actions-hugo@v3
         with:
-          hugo-version: "0.168.0"
+          hugo-version: "0.170.0"
           extended: true
       - name: install headless Chrome
         id: chrome
