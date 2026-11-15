@@ -100,10 +100,21 @@ func TestBrowserReadout(t *testing.T) {
 			t.Fatal(err)
 		}
 		k := r.Width / float64(d.ViewBox[0])
-		err = chromedp.Do(ctx,
-			chromedp.MouseEvent(chromedp.MouseMoved, r.Left+vx*k, r.Top+vy*k),
-			chromedp.Poll[chromedp.Void](`(function(s){return `+ready+`})(document.getElementById("fig-read").textContent)`, chromedp.WithPollingTimeout(5*time.Second)),
-		)
+		// On the CI runner with chromedp v0.23.1 a pointermove is sometimes
+		// never delivered (the page's own handler is not reached: measured,
+		// the pointer was over the figure's IMG and the readout kept the
+		// previous sample), so the move is sent again, after one pixel to
+		// the side, before the test calls it a miss.
+		for attempt := 0; attempt < 3; attempt++ {
+			err = chromedp.Do(ctx,
+				chromedp.MouseEvent(chromedp.MouseMoved, r.Left+vx*k+float64(attempt), r.Top+vy*k),
+				chromedp.MouseEvent(chromedp.MouseMoved, r.Left+vx*k, r.Top+vy*k),
+				chromedp.Poll[chromedp.Void](`(function(s){return `+ready+`})(document.getElementById("fig-read").textContent)`, chromedp.WithPollingTimeout(3*time.Second)),
+			)
+			if err == nil {
+				break
+			}
+		}
 		text, _ := chromedp.Run(context.WithoutCancel(ctx), chromedp.Text(chromedp.CSS("#fig-read")))
 		if err != nil {
 			// Where the pointer was, so that a miss is not a guess.
