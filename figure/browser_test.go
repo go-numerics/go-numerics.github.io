@@ -106,7 +106,12 @@ func TestBrowserReadout(t *testing.T) {
 		)
 		text, _ := chromedp.Run(context.WithoutCancel(ctx), chromedp.Text(chromedp.CSS("#fig-read")))
 		if err != nil {
-			t.Fatalf("pointer at (%.2f, %.2f): readout %q never satisfied %s: %v", vx, vy, text, ready, err)
+			// Where the pointer was, so that a miss is not a guess.
+			px, py := r.Left+vx*k, r.Top+vy*k
+			where, _ := chromedp.Run(context.WithoutCancel(ctx), chromedp.Evaluate[string](fmt.Sprintf(
+				`(function(){var e=document.elementFromPoint(%g,%g);return JSON.stringify({scrollY:scrollY,inner:[innerWidth,innerHeight],at:e?e.tagName+"#"+e.id:null,fig:%s})})()`,
+				px, py, figRect)))
+			t.Fatalf("pointer at (%.2f, %.2f), pixels (%.1f, %.1f): readout %q never satisfied %s: %v\npage: %s", vx, vy, px, py, text, ready, err, where)
 		}
 		return text
 	}
