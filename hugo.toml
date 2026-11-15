@@ -49,7 +49,7 @@ disableKinds = ['taxonomy', 'term', 'rss', 'sitemap', '404']
   name  = "integrate"
   kind  = "library"
   href  = "https://github.com/go-numerics/integrate"
-  blurb = "Adaptive quadrature ported from the netlib QUADPACK, fixed and sample rules, double, triple and N-dimensional integrals, and initial value problems with RK45, RK23, DOP853, Radau, BDF and automatic stiffness switching, with events and dense output."
+  blurb = "Adaptive quadrature ported from the netlib QUADPACK, fixed and sample rules, double, triple and N-dimensional integrals, and initial value problems with RK45, RK23, DOP853, Radau, BDF and ODEPACK's LSODA (automatic Adams/BDF stiffness switching, with banded Jacobians, <code>tcrit</code>, <code>hmin</code> and an <code>Exact</code> option that equals SciPy's lsoda.c), with events and dense output. Release v0.3.0."
 [[params.repos]]
   name  = "special"
   kind  = "library"
