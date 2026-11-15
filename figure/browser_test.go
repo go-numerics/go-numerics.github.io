@@ -13,7 +13,6 @@ import (
 	"testing"
 	"time"
 
-	"github.com/chromedp/cdproto/input"
 	"github.com/chromedp/chromedp"
 	"github.com/chromedp/chromedp/kb"
 )
@@ -63,14 +62,17 @@ func TestBrowserReadout(t *testing.T) {
 	defer cancel()
 
 	const figRect = `(function(){var r=document.querySelector("#fig-live img").getBoundingClientRect();return {Left:r.left,Top:r.top,Width:r.width}})()`
-	var rect struct{ Left, Top, Width float64 }
-	if err := chromedp.Run(ctx,
+	type place struct{ Left, Top, Width float64 }
+	if err := chromedp.Do(ctx,
 		chromedp.Navigate(srv.URL+"/"),
-		chromedp.ScrollIntoView("#fig-live", chromedp.ByQuery),
+		chromedp.ScrollIntoView(chromedp.CSS("#fig-live")),
 		// The listeners are attached once figure.json has loaded.
-		chromedp.Poll(`document.getElementById("fig-vl").getAttribute("y1") === "`+strconv.Itoa(d.Box[1])+`"`, nil),
-		chromedp.Evaluate(figRect, &rect),
+		chromedp.Poll[chromedp.Void](`document.getElementById("fig-vl").getAttribute("y1") === "`+strconv.Itoa(d.Box[1])+`"`),
 	); err != nil {
+		t.Fatal(err)
+	}
+	rect, err := chromedp.Run(ctx, chromedp.Evaluate[place](figRect))
+	if err != nil {
 		t.Fatal(err)
 	}
 	s := rect.Width / float64(d.ViewBox[0])
@@ -93,17 +95,16 @@ func TestBrowserReadout(t *testing.T) {
 		// The figure's place is measured again before each move: the page
 		// may still be scrolling from ScrollIntoView, and a stale rectangle
 		// puts the pointer outside the plot area.
-		var r struct{ Left, Top, Width float64 }
-		if err := chromedp.Run(ctx, chromedp.Evaluate(figRect, &r)); err != nil {
+		r, err := chromedp.Run(ctx, chromedp.Evaluate[place](figRect))
+		if err != nil {
 			t.Fatal(err)
 		}
 		k := r.Width / float64(d.ViewBox[0])
-		var text string
-		err := chromedp.Run(ctx,
-			chromedp.MouseEvent(input.MouseMoved, r.Left+vx*k, r.Top+vy*k),
-			chromedp.Poll(`(function(s){return `+ready+`})(document.getElementById("fig-read").textContent)`, nil, chromedp.WithPollingTimeout(5*time.Second)),
+		err = chromedp.Do(ctx,
+			chromedp.MouseEvent(chromedp.MouseMoved, r.Left+vx*k, r.Top+vy*k),
+			chromedp.Poll[chromedp.Void](`(function(s){return `+ready+`})(document.getElementById("fig-read").textContent)`, chromedp.WithPollingTimeout(5*time.Second)),
 		)
-		_ = chromedp.Run(context.WithoutCancel(ctx), chromedp.Text("#fig-read", &text, chromedp.ByQuery))
+		text, _ := chromedp.Run(context.WithoutCancel(ctx), chromedp.Text(chromedp.CSS("#fig-read")))
 		if err != nil {
 			t.Fatalf("pointer at (%.2f, %.2f): readout %q never satisfied %s: %v", vx, vy, text, ready, err)
 		}
@@ -145,13 +146,15 @@ func TestBrowserReadout(t *testing.T) {
 	}
 
 	// Keyboard: Home, then two right arrows, is sample 2.
-	var text string
-	if err := chromedp.Run(ctx,
-		chromedp.Focus("#fig-live", chromedp.ByQuery),
+	if err := chromedp.Do(ctx,
+		chromedp.Focus(chromedp.CSS("#fig-live")),
 		chromedp.KeyEvent(kb.Home),
 		chromedp.KeyEvent(kb.ArrowRight), chromedp.KeyEvent(kb.ArrowRight),
-		chromedp.Text("#fig-read", &text, chromedp.ByQuery),
 	); err != nil {
+		t.Fatal(err)
+	}
+	text, err := chromedp.Run(ctx, chromedp.Text(chromedp.CSS("#fig-read")))
+	if err != nil {
 		t.Fatal(err)
 	}
 	want := fmt.Sprintf("dense output, sample 2 of %d: t = %s, prey = %s, predators = %s", d.N-1, f(tOf(2)), f(d.Prey[2]), f(d.Pred[2]))
