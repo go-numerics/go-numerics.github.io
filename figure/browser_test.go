@@ -68,6 +68,8 @@ func TestBrowserReadout(t *testing.T) {
 		chromedp.ScrollIntoView(chromedp.CSS("#fig-live")),
 		// The listeners are attached once figure.json has loaded.
 		chromedp.Poll[chromedp.Void](`document.getElementById("fig-vl").getAttribute("y1") === "`+strconv.Itoa(d.Box[1])+`"`),
+		// A witness for a miss: how many pointermoves the figure saw, and the last.
+		chromedp.Evaluate[chromedp.Void](`window.__pm={n:0};document.getElementById("fig-live").addEventListener("pointermove",function(e){__pm.n++;__pm.x=e.clientX;__pm.y=e.clientY;__pm.type=e.pointerType})`),
 	); err != nil {
 		t.Fatal(err)
 	}
@@ -120,7 +122,7 @@ func TestBrowserReadout(t *testing.T) {
 			// Where the pointer was, so that a miss is not a guess.
 			px, py := r.Left+vx*k, r.Top+vy*k
 			where, _ := chromedp.Run(context.WithoutCancel(ctx), chromedp.Evaluate[string](fmt.Sprintf(
-				`(function(){var e=document.elementFromPoint(%g,%g);return JSON.stringify({scrollY:scrollY,inner:[innerWidth,innerHeight],at:e?e.tagName+"#"+e.id:null,fig:%s})})()`,
+				`(function(){var e=document.elementFromPoint(%g,%g);return JSON.stringify({pm:window.__pm,scrollY:scrollY,inner:[innerWidth,innerHeight],at:e?e.tagName+"#"+e.id:null,fig:%s})})()`,
 				px, py, figRect)))
 			t.Fatalf("pointer at (%.2f, %.2f), pixels (%.1f, %.1f): readout %q never satisfied %s: %v\npage: %s", vx, vy, px, py, text, ready, err, where)
 		}
