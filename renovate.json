@@ -1,4 +1,14 @@
 {
   "$schema": "https://docs.renovatebot.com/renovate-schema.json",
-  "extends": ["github>go-numerics/.github"]
+  "extends": ["github>go-numerics/.github"],
+  "packageRules": [
+    {
+      "description": [
+        "The notebook playground gets its own branch. The org preset groups every minor and patch update of a repository into one branch, renovate/deps, which stays red while any other dependency in it breaks the build: here it was red from 2026-10-24, and the playground pin sat at v0.7.1 inside it while v0.16.0 was released. Alone, the playground bump is judged by the checks that build the notebooks."
+      ],
+      "matchManagers": ["gomod"],
+      "matchPackageNames": ["github.com/go-notebook/playground"],
+      "groupName": null
+    }
+  ]
 }

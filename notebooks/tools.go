@@ -6,4 +6,9 @@
 // the build runs each one first and fails if a cell fails.
 package notebooks
 
-import _ "github.com/go-notebook/playground/cmd/build"
+import (
+	_ "github.com/go-notebook/playground/cmd/build"
+	// The build compiles cmd/editor (js/wasm, since v0.11.0) in this module,
+	// so its imports must be in go.sum too.
+	_ "github.com/go-notebook/playground/cmd/editor"
+)
