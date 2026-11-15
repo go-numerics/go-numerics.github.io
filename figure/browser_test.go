@@ -13,7 +13,6 @@ import (
 	"testing"
 	"time"
 
-	"github.com/chromedp/cdproto/input"
 	"github.com/chromedp/chromedp"
 	"github.com/chromedp/chromedp/kb"
 )
@@ -63,14 +62,19 @@ func TestBrowserReadout(t *testing.T) {
 	defer cancel()
 
 	const figRect = `(function(){var r=document.querySelector("#fig-live img").getBoundingClientRect();return {Left:r.left,Top:r.top,Width:r.width}})()`
-	var rect struct{ Left, Top, Width float64 }
-	if err := chromedp.Run(ctx,
+	type place struct{ Left, Top, Width float64 }
+	if err := chromedp.Do(ctx,
 		chromedp.Navigate(srv.URL+"/"),
-		chromedp.ScrollIntoView("#fig-live", chromedp.ByQuery),
+		chromedp.ScrollIntoView(chromedp.CSS("#fig-live")),
 		// The listeners are attached once figure.json has loaded.
-		chromedp.Poll(`document.getElementById("fig-vl").getAttribute("y1") === "`+strconv.Itoa(d.Box[1])+`"`, nil),
-		chromedp.Evaluate(figRect, &rect),
+		chromedp.Poll[chromedp.Void](`document.getElementById("fig-vl").getAttribute("y1") === "`+strconv.Itoa(d.Box[1])+`"`),
+		// A witness for a miss: how many pointermoves the figure saw, and the last.
+		chromedp.Evaluate[chromedp.Void](`window.__pm={n:0};document.getElementById("fig-live").addEventListener("pointermove",function(e){__pm.n++;__pm.x=e.clientX;__pm.y=e.clientY;__pm.type=e.pointerType})`),
 	); err != nil {
+		t.Fatal(err)
+	}
+	rect, err := chromedp.Run(ctx, chromedp.Evaluate[place](figRect))
+	if err != nil {
 		t.Fatal(err)
 	}
 	s := rect.Width / float64(d.ViewBox[0])
@@ -93,19 +97,34 @@ func TestBrowserReadout(t *testing.T) {
 		// The figure's place is measured again before each move: the page
 		// may still be scrolling from ScrollIntoView, and a stale rectangle
 		// puts the pointer outside the plot area.
-		var r struct{ Left, Top, Width float64 }
-		if err := chromedp.Run(ctx, chromedp.Evaluate(figRect, &r)); err != nil {
+		r, err := chromedp.Run(ctx, chromedp.Evaluate[place](figRect))
+		if err != nil {
 			t.Fatal(err)
 		}
 		k := r.Width / float64(d.ViewBox[0])
-		var text string
-		err := chromedp.Run(ctx,
-			chromedp.MouseEvent(input.MouseMoved, r.Left+vx*k, r.Top+vy*k),
-			chromedp.Poll(`(function(s){return `+ready+`})(document.getElementById("fig-read").textContent)`, nil, chromedp.WithPollingTimeout(5*time.Second)),
-		)
-		_ = chromedp.Run(context.WithoutCancel(ctx), chromedp.Text("#fig-read", &text, chromedp.ByQuery))
+		// On the CI runner with chromedp v0.23.1 a pointermove is sometimes
+		// never delivered (the page's own handler is not reached: measured,
+		// the pointer was over the figure's IMG and the readout kept the
+		// previous sample), so the move is sent again, after one pixel to
+		// the side, before the test calls it a miss.
+		for attempt := 0; attempt < 3; attempt++ {
+			err = chromedp.Do(ctx,
+				chromedp.MouseEvent(chromedp.MouseMoved, r.Left+vx*k+float64(attempt), r.Top+vy*k),
+				chromedp.MouseEvent(chromedp.MouseMoved, r.Left+vx*k, r.Top+vy*k),
+				chromedp.Poll[chromedp.Void](`(function(s){return `+ready+`})(document.getElementById("fig-read").textContent)`, chromedp.WithPollingTimeout(3*time.Second)),
+			)
+			if err == nil {
+				break
+			}
+		}
+		text, _ := chromedp.Run(context.WithoutCancel(ctx), chromedp.Text(chromedp.CSS("#fig-read")))
 		if err != nil {
-			t.Fatalf("pointer at (%.2f, %.2f): readout %q never satisfied %s: %v", vx, vy, text, ready, err)
+			// Where the pointer was, so that a miss is not a guess.
+			px, py := r.Left+vx*k, r.Top+vy*k
+			where, _ := chromedp.Run(context.WithoutCancel(ctx), chromedp.Evaluate[string](fmt.Sprintf(
+				`(function(){var e=document.elementFromPoint(%g,%g);return JSON.stringify({pm:window.__pm,scrollY:scrollY,inner:[innerWidth,innerHeight],at:e?e.tagName+"#"+e.id:null,fig:%s})})()`,
+				px, py, figRect)))
+			t.Fatalf("pointer at (%.2f, %.2f), pixels (%.1f, %.1f): readout %q never satisfied %s: %v\npage: %s", vx, vy, px, py, text, ready, err, where)
 		}
 		return text
 	}
@@ -145,13 +164,15 @@ func TestBrowserReadout(t *testing.T) {
 	}
 
 	// Keyboard: Home, then two right arrows, is sample 2.
-	var text string
-	if err := chromedp.Run(ctx,
-		chromedp.Focus("#fig-live", chromedp.ByQuery),
+	if err := chromedp.Do(ctx,
+		chromedp.Focus(chromedp.CSS("#fig-live")),
 		chromedp.KeyEvent(kb.Home),
 		chromedp.KeyEvent(kb.ArrowRight), chromedp.KeyEvent(kb.ArrowRight),
-		chromedp.Text("#fig-read", &text, chromedp.ByQuery),
 	); err != nil {
+		t.Fatal(err)
+	}
+	text, err := chromedp.Run(ctx, chromedp.Text(chromedp.CSS("#fig-read")))
+	if err != nil {
 		t.Fatal(err)
 	}
 	want := fmt.Sprintf("dense output, sample 2 of %d: t = %s, prey = %s, predators = %s", d.N-1, f(tOf(2)), f(d.Prey[2]), f(d.Pred[2]))

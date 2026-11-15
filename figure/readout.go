@@ -44,8 +44,10 @@ type readout struct {
 }
 
 // clipRect is the plot area go-plot clips the curves to: the first
-// clipPath of the SVG it draws.
-var clipRect = regexp.MustCompile(`<clipPath id="c1"><rect x="(\d+)" y="(\d+)" width="(\d+)" height="(\d+)"/>`)
+// clipPath of the SVG it draws. Its id is a hash of its rectangle since go-plot
+// v0.3.0 (it was "c1"), so that figures inlined in one page do not resolve
+// url(#c1) to each other's box.
+var clipRect = regexp.MustCompile(`<clipPath id="[^"]+"><rect x="(\d+)" y="(\d+)" width="(\d+)" height="(\d+)"/>`)
 
 // writeReadout writes the readout when -readout names a file. It draws the
 // figure a second time into memory to read the plot area, so the page maps
